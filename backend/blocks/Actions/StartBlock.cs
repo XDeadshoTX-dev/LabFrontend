@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,55 +21,56 @@ namespace LabBackend.Blocks.Actions
 
             switch (language.ToLower())
             {
+                case "c":
+                    code = @"#include <stdio.h>
+
+int main()
+{
+    return 0;
+}
+";
+                    break;
                 case "c++":
-                    code = "#include <iostream>\n" +
-                           "using namespace std;\n" +
-                           "\n" +
-                           "int main()\n" +
-                           "{\n" +
-                           "    cout << \"Hello World!\\n\";\n" +
-                           "    return 0;\n" +
-                           "}";
-                    break;
+                    code = @"#include <iostream>
+using namespace std;
 
+int main()
+{
+}
+";
+                    break;
                 case "c#":
-                    code = "using System;\n" +
-                           "\n" +
-                           "class Program\n" +
-                           "{\n" +
-                           "    static void Main(string[] args)\n" +
-                           "    {\n" +
-                           "        Console.WriteLine(\"Hello World!\");\n" +
-                           "    }\n" +
-                           "}";
-                    break;
+                    code = @"using System;
 
-                case "python":
-                    code = "if __name__ == '__main__':\n" +
-                           "    print(\"Hello World!\")";
-                    break;
-
-                default:
-                    Console.WriteLine("Unsupported language.");
-                    return;
-            }
-
-            string fileName = $"GeneratedCode.{GetFileExtension()}";
-            File.WriteAllText(fileName, code);
-        }
-        private string GetFileExtension()
+namespace ConsoleApp1
+{
+    internal class Program
+    {
+        static void Main(string[] args)
         {
-            switch (language.ToLower())
-            {
-                case "c++":
-                    return "cpp";
-                case "c#":
-                    return "cs";
+        }
+    }
+}
+";
+                    break;
+                case "java":
+                    code = @"public class Main {
+    public static void main(String[] args) {
+    }
+}
+";
+                    break;
                 case "python":
-                    return "py";
+                    code = @"if __name__ == '__main__':
+    pass
+";
+                    break;
                 default:
-                    return "txt";
+                    code = "";
+                    break;
             }
+            string fileName = $"GeneratedCode.{this.GetFileExtension()}";
+            File.WriteAllText(fileName, code);
         }
     }
 }

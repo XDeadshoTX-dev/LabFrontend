@@ -57,5 +57,23 @@ namespace LabBackend.Utils.Abstract
         {
             Console.WriteLine($"Executing AbstractBlock: {name}, Data: {content}\n");
         }
+        protected string GetFileExtension()
+        {
+            switch (this.language)
+            {
+                case "c":
+                    return "c";
+                case "c++":
+                    return "cpp";
+                case "c#":
+                    return "cs";
+                case "java":
+                    return "java";
+                case "python":
+                    return "py";
+                default:
+                    return "";
+            }
+        }
     }
 }
