@@ -1,4 +1,5 @@
 ﻿using LabBackend.Blocks.Actions;
+using LabBackend.Blocks.Conditions;
 using LabBackend.Utils.Abstract;
 using LabBackend.Utils.Interfaces;
 using System;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WpfApp2.frontend.blocks;
+using WpfApp2.frontend.utils;
 
 namespace LabBackend.Utils
 {
@@ -224,6 +226,46 @@ namespace LabBackend.Utils
                 }
             }
             return matrix;
+        }
+        public void translateCode(string languageCode, List<Block> linkedFrontendBlocks, Dictionary<int, Dictionary<int, bool>> adjacencyMatrix)
+        {
+            int startId = adjacencyMatrix.Keys.First();
+
+            void Traverse(int currentId)
+            {
+                Block frontendBlock = linkedFrontendBlocks.Find(block => block.Id == currentId);
+                AbstractBlock backendBlock;
+
+                switch(frontendBlock.Type)
+                {
+                    case "start":
+                        backendBlock = new StartBlock(languageCode);
+                        break;
+                    case "AssignmentBlock":
+                        backendBlock = new AssignmentBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "ConstantAssignmentBlock":
+                        backendBlock = new ConstantAssignmentBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "InputBlock":
+                        backendBlock = new InputBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "PrintBlock":
+                        backendBlock = new PrintBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "if":
+                        backendBlock = new ConditionBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "end":
+                        backendBlock = new EndBlock(languageCode);
+                        break;
+                    default:
+                        throw new NotSupportedException($"Block type '{frontendBlock.Type}' is not supported.");
+                }
+            }
+
+            Traverse(startId);
+            return;
         }
     }
 }

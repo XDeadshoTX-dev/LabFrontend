@@ -16,5 +16,6 @@ namespace LabBackend.Utils.Interfaces
         public List<Block> getLinkedFrontendBlocks(List<Block> blocksRAWFrontend);
         public AbstractBlock GetBlockById(List<AbstractBlock> uiLinkedBlocks, int Id);
         public Dictionary<int, Dictionary<int, bool>> createAdjacencyMatrix(List<Block> linkedFrontendBlocks);
+        public void translateCode(string languageCode, List<Block> linkedFrontendBlocks, Dictionary<int, Dictionary<int, bool>> adjacencyMatrix);
     }
 }

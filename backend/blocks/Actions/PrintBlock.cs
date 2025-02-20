@@ -11,40 +11,40 @@ namespace LabBackend.Blocks.Actions
     // Клас для команди PRINT V
     public class PrintBlock : AbstractBlock
     {
-        public PrintBlock(int Id, string data) : base(Id, data)
+        public PrintBlock(string languageCode, string data) : base(languageCode, data)
         {
-            this.NameBlock = "PrintBlock";
+            this.name = "PrintBlock";
         }
         private bool IsValidVariableName(string variableName)
         {
             return Regex.IsMatch(variableName, @"^[a-zA-Z_]\w*$");
         }
 
-        public override void Execute(string programmingLanguage, int amountTabs)
+        public override void Execute(int amountTabs)
         {
-            if (!IsValidVariableName(this.Data))
+            if (!IsValidVariableName(this.content))
             {
                 Console.WriteLine("Invalid variable name format");
                 return;
             }
 
-            Console.WriteLine($"Printing {this.Id} \"{this.NameBlock}\": {this.Data}");
-            switch (programmingLanguage)
+            Console.WriteLine($"Printing {this.id} \"{this.name}\": {this.content}");
+            switch (this.language)
             {
-                case "C":
-                    Console.WriteLine($"{new string('\t', amountTabs)}printf(\"%s\", {this.Data});");
+                case "c":
+                    Console.WriteLine($"{new string('\t', amountTabs)}printf(\"%s\", {this.content});");
                     break;
-                case "C++":
-                    Console.WriteLine($"{new string('\t', amountTabs)}std::cout << {this.Data} << std::endl;");
+                case "c++":
+                    Console.WriteLine($"{new string('\t', amountTabs)}std::cout << {this.content} << std::endl;");
                     break;
-                case "C#":
-                    Console.WriteLine($"{new string('\t', amountTabs)}Console.WriteLine({this.Data});");
+                case "c#":
+                    Console.WriteLine($"{new string('\t', amountTabs)}Console.WriteLine({this.content});");
                     break;
-                case "Python":
-                    Console.WriteLine($"{new string('\t', amountTabs)}print({this.Data});");
+                case "python":
+                    Console.WriteLine($"{new string('\t', amountTabs)}print({this.content});");
                     break;
-                case "Java":
-                    Console.WriteLine($"{new string('\t', amountTabs)}System.out.println({this.Data});");
+                case "java":
+                    Console.WriteLine($"{new string('\t', amountTabs)}System.out.println({this.content});");
                     break;
             }
         }

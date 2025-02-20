@@ -11,69 +11,51 @@ namespace LabBackend.Utils.Abstract
 {
     public abstract class AbstractBlock : ICloneable
     {
-        public string NameBlock { get; set; }
-        public int Id { get; set; }
-        public string Data { get; set; }
+        public string name { get; set; }
+        public int id { get; set; }
+        public string content { get; set; }
+        protected string language { get; set; }
         public AbstractBlock[] Next { get; set; }
 
-        public AbstractBlock(int id, string data)
+        public AbstractBlock(string languageCode, string content)
         {
-            IIdentifiable identifiable = new Md5Manager();
-
-            this.Id = id;
-            this.Data = data;
+            this.id = id;
+            this.content = content;
+            this.language = languageCode.ToLower();
             this.Next = Array.Empty<AbstractBlock>();
         }
-        public AbstractBlock(List<AbstractBlock> UIArray)
-        {
-            IIdentifiable identifiable = new Md5Manager();
-            //Id = identifiable.generateID();
-            this.Id = 0;
-            this.Next = UIArray.ToArray();
-        }
+        //public AbstractBlock(List<AbstractBlock> UIArray)
+        //{
+        //    this.id = 0;
+        //    this.Next = UIArray.ToArray();
+        //}
         public virtual object Clone()
         {
             return (AbstractBlock)MemberwiseClone();
         }
         public virtual string getNameBlock()
         {
-            return NameBlock;
+            return name;
         }
         public virtual int getId()
         {
-            return Id;
+            return id;
         }
         public virtual void setData(string data)
         {
-            Data = data;
+            this.content = data;
         }
         public virtual string getData()
         {
-            return Data;
+            return content;
         }
         public virtual void Execute()
         {
-            Console.WriteLine($"Executing AbstractBlock: {NameBlock}, Data: {Data}\n");
-
-            foreach (var nextBlock in Next)
-            {
-                if (nextBlock != null)
-                {
-                    nextBlock.Execute();
-                }
-            }
+            Console.WriteLine($"Executing AbstractBlock: {name}, Data: {content}\n");
         }
-        public virtual void Execute(string programmingLanguage, int amountTabs)
+        public virtual void Execute(int amountTabs)
         {
-            Console.WriteLine($"Executing AbstractBlock: {NameBlock}, Data: {Data}\n");
-
-            foreach (var nextBlock in Next)
-            {
-                if (nextBlock != null)
-                {
-                    nextBlock.Execute(programmingLanguage, amountTabs);
-                }
-            }
+            Console.WriteLine($"Executing AbstractBlock: {name}, Data: {content}\n");
         }
     }
 }

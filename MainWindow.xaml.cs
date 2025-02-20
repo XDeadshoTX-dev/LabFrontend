@@ -308,6 +308,7 @@ namespace BlockLinkingApp
             List<Block> blocksRAWFrontend = uiManager.getBlocks();
             List<Block> linkedFrontendBlocks = blockManager.getLinkedFrontendBlocks(blocksRAWFrontend);
             Dictionary<int, Dictionary<int, bool>> adjacencyMatrix = blockManager.createAdjacencyMatrix(linkedFrontendBlocks);
+            blockManager.translateCode(uiManager.getLanguageCode(), linkedFrontendBlocks, adjacencyMatrix);
         }
 
         private Brush GetBlockBackground(string type)

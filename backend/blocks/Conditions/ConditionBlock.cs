@@ -11,9 +11,9 @@ namespace LabBackend.Blocks.Conditions
     // Клас для умовного блоку V==C або V<C
     public class ConditionBlock : AbstractBlock
     {
-        public ConditionBlock(int Id, string data) : base(Id, data)
+        public ConditionBlock(string languageCode, string data) : base(languageCode, data)
         {
-            this.NameBlock = "Condition";
+            this.name = "Condition";
         }
 
         private bool IsValidCondition(string data)
@@ -21,28 +21,28 @@ namespace LabBackend.Blocks.Conditions
             return Regex.IsMatch(data, @"^[a-zA-Z_]\w*(==|<)\d+$");
         }
 
-        public override void Execute(string programmingLanguage, int amountTabs)
+        public override void Execute(int amountTabs)
         {
-            if (!IsValidCondition(this.Data))
+            if (!IsValidCondition(this.content))
             {
                 Console.WriteLine("Invalid condition format");
                 return;
             }
 
-            Console.WriteLine($"Executing {this.Id} \"{this.NameBlock}\": {this.Data}");
+            Console.WriteLine($"Executing {this.id} \"{this.name}\": {this.content}");
 
             string condition = "";
 
-            switch (programmingLanguage)
+            switch (this.language)
             {
-                case "Python":
-                    condition = $"{new string('\t', amountTabs)}if {this.Data}:";
+                case "python":
+                    condition = $"{new string('\t', amountTabs)}if {this.content}:";
                     break;
-                case "C":
-                case "C++":
-                case "C#":
-                case "Java":
-                    condition = $"{new string('\t', amountTabs)}if ({this.Data}) {{";
+                case "c":
+                case "c++":
+                case "c#":
+                case "java":
+                    condition = $"{new string('\t', amountTabs)}if ({this.content}) {{";
                     break;
                 default:
                     Console.WriteLine("Unknown programming language");
