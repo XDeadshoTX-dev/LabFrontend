@@ -262,6 +262,8 @@ namespace LabBackend.Utils
                     default:
                         throw new NotSupportedException($"Block type '{frontendBlock.Type}' is not supported.");
                 }
+
+                backendBlock.Execute();
             }
 
             Traverse(startId);
