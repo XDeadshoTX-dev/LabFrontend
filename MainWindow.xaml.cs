@@ -307,61 +307,7 @@ namespace BlockLinkingApp
 
             List<Block> blocksRAWFrontend = uiManager.getBlocks();
             List<Block> linkedFrontendBlocks = blockManager.getLinkedFrontendBlocks(blocksRAWFrontend);
-            Dictionary<int, Dictionary<int, bool>> blocksFrontend = blockManager.createAdjacencyMatrix(linkedFrontendBlocks);
-            //foreach (Block block in blocksFrontend)
-            //{
-            //    switch (block.Type)
-            //    {
-            //        case "start":
-            //            uiBlocksBackend.Add(new StartBlock(block.Id));
-            //            break;
-            //        case "end":
-            //            uiBlocksBackend.Add(new EndBlock(block.Id));
-            //            break;
-            //        case "AssignmentBlock":
-            //            uiBlocksBackend.Add(new AssignmentBlock(block.Id, block.Text));
-            //            break;
-            //        case "ConstantAssignmentBlock":
-            //            uiBlocksBackend.Add(new ConstantAssignmentBlock(block.Id, block.Text));
-            //            break;
-            //        case "InputBlock":
-            //            uiBlocksBackend.Add(new InputBlock(block.Id, block.Text));
-            //            break;
-            //        case "PrintBlock":
-            //            uiBlocksBackend.Add(new PrintBlock(block.Id, block.Text));
-            //            break;
-            //        case "if":
-            //            uiBlocksBackend.Add(new ConditionBlock(block.Id, block.Text));
-            //            break;
-            //    }
-            //}
-
-            //foreach (Block block in blocksFrontend)
-            //{
-            //    if (block.Type != "if")
-            //    {
-            //        if (block.NextBlockId != null)
-            //        {
-            //            blockManager.SetLink(uiBlocksBackend, block.Id, new int[] { (int)block.NextBlockId });
-            //        }
-            //        continue;
-            //    }
-
-            //    List<int> toIds = new List<int>();
-            //    if (block.TrueBlockId != null)
-            //    {
-            //        toIds.Add((int)block.TrueBlockId);
-            //    }
-            //    if (block.FalseBlockId != null)
-            //    {
-            //        toIds.Add((int)block.FalseBlockId);
-            //    }
-            //    blockManager.SetLink(uiBlocksBackend, block.Id, toIds.ToArray());
-            //}
-
-            //List<AbstractBlock> uiLinkedBlocksBackend = blockManager.GetLinkedBlocks(uiBlocksBackend);
-
-            //Dictionary<int, Dictionary<int, bool>> adjacencyMatrix = blockManager.CreateAdjacencyMatrix(uiLinkedBlocksBackend);
+            Dictionary<int, Dictionary<int, bool>> adjacencyMatrix = blockManager.createAdjacencyMatrix(linkedFrontendBlocks);
         }
 
         private Brush GetBlockBackground(string type)
