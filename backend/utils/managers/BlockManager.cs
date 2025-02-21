@@ -94,7 +94,7 @@ namespace LabBackend.Utils
 
             return result;
         }
-        public List<Block> getLinkedFrontendBlocks(List<Block> blocksRAWFrontend)
+        public List<Block> GetLinkedFrontendBlocks(List<Block> blocksRAWFrontend)
         {
             List<Block> result = new List<Block>();
             Block startBlock = blocksRAWFrontend[0];
@@ -139,7 +139,7 @@ namespace LabBackend.Utils
             }
             return null;
         }
-        public Dictionary<int, Dictionary<int, bool>> createAdjacencyMatrix(List<Block> linkedFrontendBlocks)
+        public Dictionary<int, Dictionary<int, bool>> CreateAdjacencyMatrix(List<Block> linkedFrontendBlocks)
         {
             Dictionary<int, Dictionary<int, bool>> matrix = new Dictionary<int, Dictionary<int, bool>>();
             Stack<int> buffer = new Stack<int>();
@@ -227,7 +227,7 @@ namespace LabBackend.Utils
             }
             return matrix;
         }
-        public void translateCode(string languageCode, List<Block> linkedFrontendBlocks, Dictionary<int, Dictionary<int, bool>> adjacencyMatrix)
+        public void TranslateCode(string languageCode, List<Block> linkedFrontendBlocks, Dictionary<int, Dictionary<int, bool>> adjacencyMatrix)
         {
             int startId = adjacencyMatrix.Keys.First();
             Dictionary<int, int> test = new Dictionary<int, int>();

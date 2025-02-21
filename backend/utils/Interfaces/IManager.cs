@@ -13,9 +13,9 @@ namespace LabBackend.Utils.Interfaces
         public void SetLink(List<AbstractBlock> uiBlocks, int fromID, int[] toID);
         public void RemoveLink(List<AbstractBlock> uiBlocks, int fromID, int[] toID);
         public List<AbstractBlock> GetLinkedBlocks(List<AbstractBlock> uiBlocks);
-        public List<Block> getLinkedFrontendBlocks(List<Block> blocksRAWFrontend);
+        public List<Block> GetLinkedFrontendBlocks(List<Block> blocksRAWFrontend);
         public AbstractBlock GetBlockById(List<AbstractBlock> uiLinkedBlocks, int Id);
-        public Dictionary<int, Dictionary<int, bool>> createAdjacencyMatrix(List<Block> linkedFrontendBlocks);
-        public void translateCode(string languageCode, List<Block> linkedFrontendBlocks, Dictionary<int, Dictionary<int, bool>> adjacencyMatrix);
+        public Dictionary<int, Dictionary<int, bool>> CreateAdjacencyMatrix(List<Block> linkedFrontendBlocks);
+        public void TranslateCode(string languageCode, List<Block> linkedFrontendBlocks, Dictionary<int, Dictionary<int, bool>> adjacencyMatrix);
     }
 }
