@@ -230,13 +230,15 @@ namespace LabBackend.Utils
         public void translateCode(string languageCode, List<Block> linkedFrontendBlocks, Dictionary<int, Dictionary<int, bool>> adjacencyMatrix)
         {
             int startId = adjacencyMatrix.Keys.First();
+            Dictionary<int, int> test = new Dictionary<int, int>();
+            int deep = 0;
 
             void Traverse(int currentId)
             {
                 Block frontendBlock = linkedFrontendBlocks.Find(block => block.Id == currentId);
                 AbstractBlock backendBlock;
 
-                switch(frontendBlock.Type)
+                switch (frontendBlock.Type)
                 {
                     case "start":
                         backendBlock = new StartBlock(languageCode);
@@ -262,8 +264,31 @@ namespace LabBackend.Utils
                     default:
                         throw new NotSupportedException($"Block type '{frontendBlock.Type}' is not supported.");
                 }
+                backendBlock.Execute(deep);
 
-                backendBlock.Execute();
+                if (frontendBlock.Type == "if")
+                {
+                    deep++;
+                }
+                bool isFalsePart = false;
+                foreach (var nextId in adjacencyMatrix[currentId].Keys)
+                {
+                    if (isFalsePart)
+                    {
+                        deep--;
+                        Traverse(nextId);
+                        isFalsePart = false;
+                    }
+                    else
+                    {
+                        Traverse(nextId);
+                        isFalsePart = true;
+                    }
+                }
+                if (isFalsePart && frontendBlock.Type == "if")
+                {
+                    deep--;
+                }
             }
 
             Traverse(startId);

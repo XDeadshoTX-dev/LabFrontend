@@ -15,23 +15,20 @@ namespace LabBackend.Blocks.Actions
         {
             this.name = "start";
         }
-        public override void Execute()
+        public override void Execute(int deep)
         {
-            string code = "";
-
-            switch (language.ToLower())
+            switch (this.language.ToLower())
             {
                 case "c":
-                    code = @"#include <stdio.h>
+                    this.code = @"#include <stdio.h>
 
 int main()
 {
-    return 0;
 }
 ";
                     break;
                 case "c++":
-                    code = @"#include <iostream>
+                    this.code = @"#include <iostream>
 using namespace std;
 
 int main()
@@ -40,7 +37,7 @@ int main()
 ";
                     break;
                 case "c#":
-                    code = @"using System;
+                    this.code = @"using System;
 
 namespace ConsoleApp1
 {
@@ -54,23 +51,22 @@ namespace ConsoleApp1
 ";
                     break;
                 case "java":
-                    code = @"public class Main {
+                    this.code = @"public class Main {
     public static void main(String[] args) {
     }
 }
 ";
                     break;
                 case "python":
-                    code = @"if __name__ == '__main__':
+                    this.code = @"if __name__ == '__main__':
     pass
 ";
                     break;
                 default:
-                    code = "";
+                    this.code = "";
                     break;
             }
-            string fileName = $"GeneratedCode.{this.GetFileExtension()}";
-            File.WriteAllText(fileName, code);
+            File.WriteAllText(this.fileName, code);
         }
     }
 }

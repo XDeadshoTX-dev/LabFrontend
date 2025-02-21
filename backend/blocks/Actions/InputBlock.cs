@@ -21,7 +21,7 @@ namespace LabBackend.Blocks.Actions
             return Regex.IsMatch(variableName, @"^[a-zA-Z_]\w*$");
         }
 
-        public override void Execute(int amountTabs)
+        public override void Execute(int deep)
         {
             if (!IsValidVariableName(this.content))
             {
@@ -33,19 +33,19 @@ namespace LabBackend.Blocks.Actions
             switch (this.language)
             {
                 case "c":
-                    Console.WriteLine($"{new string('\t', amountTabs)}scanf(\"%d\", &{this.content});");
+                    this.code = $"{getIndent(deep)}scanf(\"%d\", &{this.content});";
                     break;
                 case "c++":
-                    Console.WriteLine($"{new string('\t', amountTabs)}cin >> {this.content};");
+                    this.code = $"{getIndent(deep)}cin >> {this.content};";
                     break;
                 case "c#":
-                    Console.WriteLine($"{new string('\t', amountTabs)}{this.content} = int.Parse(Console.ReadLine());");
+                    this.code = $"{getIndent(deep)}{this.content} = int.Parse(Console.ReadLine());";
                     break;
                 case "python":
-                    Console.WriteLine($"{new string('\t', amountTabs)}{this.content} = int(input())");
+                    this.code = $"{getIndent(deep)}{this.content} = int(input())";
                     break;
                 case "java":
-                    Console.WriteLine($"{new string('\t', amountTabs)}{this.content} = Integer.parseInt(scan.nextLine());");
+                    this.code = $"{getIndent(deep)}{this.content} = Integer.parseInt(scan.nextLine());";
                     break;
             }
         }
