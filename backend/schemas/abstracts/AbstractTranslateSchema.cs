@@ -6,8 +6,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using WpfApp2.backend.schemas.translate;
 
-namespace WpfApp2.backend.schemas.translate
+namespace WpfApp2.backend.schemas.@abstract
 {
     abstract class AbstractTranslateSchema
     {

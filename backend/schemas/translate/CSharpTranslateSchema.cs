@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Automation.Peers;
+using WpfApp2.backend.schemas.@abstract;
 
 namespace WpfApp2.backend.schemas.translate
 {

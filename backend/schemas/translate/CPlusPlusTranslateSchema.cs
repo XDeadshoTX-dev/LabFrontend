@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using WpfApp2.backend.schemas.@abstract;
 
 namespace WpfApp2.backend.schemas.translate
 {
