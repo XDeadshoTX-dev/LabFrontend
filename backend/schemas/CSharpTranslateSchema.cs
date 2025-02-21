@@ -32,14 +32,6 @@ namespace WpfApp2.backend.schemas
                 $"{openingBrace}" +
                 $"{newContent}" +
                 $"{block.getIndent(2)}{closingBrace}";
-
-            //string before = match.Groups[1].Value.Trim();
-            //string inside = match.Groups[2].Value.Trim();
-            //string after = match.Groups[3].Value;
-
-
-            //return $"{before}{newInside}{after}";
-            //return null;
         }
     }
 }
