@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.IO;
-using WpfApp2.backend.schemas;
+using WpfApp2.backend.schemas.translate;
 
 namespace LabBackend.Utils.Abstract
 {

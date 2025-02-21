@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Automation.Peers;
 
-namespace WpfApp2.backend.schemas
+namespace WpfApp2.backend.schemas.translate
 {
     class CSharpTranslateSchema : AbstractTranslateSchema
     {

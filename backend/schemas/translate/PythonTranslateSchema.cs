@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace WpfApp2.backend.schemas
+namespace WpfApp2.backend.schemas.translate
 {
     class PythonTranslateSchema : AbstractTranslateSchema
     {
