@@ -13,7 +13,7 @@ namespace LabBackend.Blocks.Conditions
     {
         public ConditionBlock(string languageCode, string data) : base(languageCode, data)
         {
-            this.name = "Condition";
+            this.Name = "Condition";
         }
 
         private bool IsValidCondition(string data)
@@ -23,26 +23,26 @@ namespace LabBackend.Blocks.Conditions
 
         public override void Execute(int amountTabs)
         {
-            if (!IsValidCondition(this.content))
+            if (!IsValidCondition(this.Content))
             {
                 Console.WriteLine("Invalid condition format");
                 return;
             }
 
-            Console.WriteLine($"Executing {this.id} \"{this.name}\": {this.content}");
+            Console.WriteLine($"Executing {this.Id} \"{this.Name}\": {this.Content}");
 
             string condition = "";
 
-            switch (this.language)
+            switch (this.Language)
             {
                 case "python":
-                    condition = $"{new string('\t', amountTabs)}if {this.content}:";
+                    condition = $"{new string('\t', amountTabs)}if {this.Content}:";
                     break;
                 case "c":
                 case "c++":
                 case "c#":
                 case "java":
-                    condition = $"{new string('\t', amountTabs)}if ({this.content}) {{";
+                    condition = $"{new string('\t', amountTabs)}if ({this.Content}) {{";
                     break;
                 default:
                     Console.WriteLine("Unknown programming language");

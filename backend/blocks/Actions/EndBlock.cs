@@ -11,7 +11,7 @@ namespace LabBackend.Blocks.Actions
     {
         public EndBlock(string languageCode) : base(languageCode, "")
         {
-            this.name = "end";
+            this.Name = "end";
         }
 
         public override void Execute()

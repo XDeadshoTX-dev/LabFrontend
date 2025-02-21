@@ -11,7 +11,7 @@ namespace LabBackend.Utils
     public class Md5Manager : IIdentifiable
     {
         Random rand = new Random();
-        public string generateID()
+        public string GenerateID()
         {
             DateTime currentTime = DateTime.UtcNow;
             double randomValue = rand.NextDouble();

@@ -14,57 +14,57 @@ namespace LabBackend.Utils.Abstract
 {
     public abstract class AbstractBlock : ICloneable
     {
-        public string name { get; set; }
-        public int id { get; set; }
-        public string content { get; set; }
+        public string Name { get; set; }
+        public int Id { get; set; }
+        public string Content { get; set; }
         public AbstractBlock[] Next { get; set; }
-        protected string language { get; set; }
-        protected int languageIndent { get; set; }
-        protected string code { get; set; }
-        protected string fileName { get; set; }
+        protected string Language { get; set; }
+        protected int LanguageIndent { get; set; }
+        protected string Code { get; set; }
+        protected string FileName { get; set; }
 
         public AbstractBlock(string languageCode, string content)
         {
-            this.id = id;
-            this.content = content;
+            this.Id = Id;
+            this.Content = content;
             this.Next = Array.Empty<AbstractBlock>();
 
-            this.language = languageCode.ToLower();
-            switch(this.language.ToLower())
+            this.Language = languageCode.ToLower();
+            switch(this.Language.ToLower())
             {
                 case "c":
                 case "c++":
                 case "c#":
                 case "java":
                 case "python":
-                    this.languageIndent = 4;
+                    this.LanguageIndent = 4;
                     break;
             }
-            fileName = $"GeneratedCode.{GetFileExtension()}";
+            FileName = $"GeneratedCode.{GetFileExtension()}";
         }
         public virtual object Clone()
         {
             return (AbstractBlock)MemberwiseClone();
         }
-        public virtual string getNameBlock()
+        public virtual string GetNameBlock()
         {
-            return name;
+            return Name;
         }
-        public virtual int getId()
+        public virtual int GetId()
         {
-            return id;
+            return Id;
         }
-        public virtual void setData(string data)
+        public virtual void SetData(string data)
         {
-            this.content = data;
+            this.Content = data;
         }
-        public virtual string getData()
+        public virtual string GetData()
         {
-            return content;
+            return Content;
         }
         protected string GetFileExtension()
         {
-            switch (this.language)
+            switch (this.Language)
             {
                 case "c":
                     return "c";
@@ -80,28 +80,28 @@ namespace LabBackend.Utils.Abstract
                     return "";
             }
         }
-        public string getIndent(int deep)
+        public string GetIndent(int deep)
         {
-            return new string(' ', this.languageIndent * deep);
+            return new string(' ', this.LanguageIndent * deep);
         }
-        protected string readAllText()
+        protected string ReadAllText()
         {
-            return File.ReadAllText(this.fileName);
+            return File.ReadAllText(this.FileName);
         }
-        protected void writeAllText(string content)
+        protected void WriteAllText(string content)
         {
-            File.WriteAllText(this.fileName, content);
+            File.WriteAllText(this.FileName, content);
         }
         protected string InsertCodeIntoMain(string fileContent, string codeToInsert)
         {
-            AbstractTranslateSchema translateSchema = AbstractTranslateSchema.GetSchema(this.language);
+            AbstractTranslateSchema translateSchema = AbstractTranslateSchema.GetSchema(this.Language);
 
             string updatedContent = Regex.Replace(
                 fileContent,
                 translateSchema.pattern,
                 match =>
                 {
-                    AbstractTranslateSchema translateSchema = AbstractTranslateSchema.GetSchema(this.language);
+                    AbstractTranslateSchema translateSchema = AbstractTranslateSchema.GetSchema(this.Language);
                     string result = translateSchema.InsertCode(match, codeToInsert, this);
 
                     return result;

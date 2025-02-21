@@ -16,7 +16,7 @@ namespace LabBackend.Blocks.Actions
     {
         public ConstantAssignmentBlock(string languageCode, string data) : base(languageCode, data)
         {
-            this.name = "ConstantAssignmentBlock";
+            this.Name = "ConstantAssignmentBlock";
         }
         private bool IsValidAssignment(string data, ref string sanitizedData)
         {
@@ -41,34 +41,34 @@ namespace LabBackend.Blocks.Actions
         public override void Execute(int deep)
         {
             string sanitizedData = string.Empty;
-            if (!IsValidAssignment(this.content, ref sanitizedData))
+            if (!IsValidAssignment(this.Content, ref sanitizedData))
             {
                 Console.WriteLine("Invalid assignment format");
                 return;
             }
 
-            string[] parts = this.content.Split('=');
+            string[] parts = this.Content.Split('=');
             string variableName = parts[0].Trim();
             string value = parts[1].Trim();
 
-            switch (this.language)
+            switch (this.Language)
             {
                 case "c":
                 case "c++":
                 case "c#":
                 case "java":
-                    this.code = $"{getIndent(deep + 1)}int {variableName} = {value};";
+                    this.Code = $"{GetIndent(deep + 1)}int {variableName} = {value};";
                     break;
                 case "python":
-                    this.code = $"{getIndent(deep)}{variableName} = {value}";
+                    this.Code = $"{GetIndent(deep)}{variableName} = {value}";
                     break;
                 default:
                     Console.WriteLine("Unknown programming language");
                     return;
             }
-            string fileContent = this.readAllText();
-            string updatedContent = InsertCodeIntoMain(fileContent, this.code);
-            this.writeAllText(updatedContent);
+            string fileContent = this.ReadAllText();
+            string updatedContent = InsertCodeIntoMain(fileContent, this.Code);
+            this.WriteAllText(updatedContent);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace LabBackend.Blocks.Actions
     {
         public AssignmentBlock(string languageCode, string data) : base(languageCode, data)
         {
-            this.name = "AssignmentBlock";
+            this.Name = "AssignmentBlock";
         }
         private bool IsValidAssignment(string data)
         {
@@ -21,15 +21,15 @@ namespace LabBackend.Blocks.Actions
         }
         public override void Execute(int amountTabs)
         {
-            if (!IsValidAssignment(this.content))
+            if (!IsValidAssignment(this.Content))
             {
                 Console.WriteLine("Invalid assignment format");
                 return;
             }
 
-            Console.WriteLine($"Executing {this.id} \"{this.name}\": {this.content}");
+            Console.WriteLine($"Executing {this.Id} \"{this.Name}\": {this.Content}");
             string indent = new string('\t', amountTabs);
-            string[] variables = this.content.Split('=');
+            string[] variables = this.Content.Split('=');
             if (variables.Length != 2)
             {
                 throw new ArgumentException("Data should be in format 'V1=V2'");
@@ -38,7 +38,7 @@ namespace LabBackend.Blocks.Actions
             string v2 = variables[1].Trim();
 
             StringBuilder code = new StringBuilder();
-            switch (this.language)
+            switch (this.Language)
             {
                 case "c":
                     code.AppendLine($"{indent}strcpy({v1}, {v2});");
@@ -52,7 +52,7 @@ namespace LabBackend.Blocks.Actions
                     code.AppendLine($"{indent}{v1} = {v2}");
                     break;
                 default:
-                    throw new NotSupportedException($"Programming language '{this.language}' is not supported.");
+                    throw new NotSupportedException($"Programming language '{this.Language}' is not supported.");
             }
             Console.WriteLine(code.ToString());
         }

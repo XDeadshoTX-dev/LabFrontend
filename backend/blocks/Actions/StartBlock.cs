@@ -13,14 +13,14 @@ namespace LabBackend.Blocks.Actions
     {
         public StartBlock(string languageCode) : base(languageCode, "")
         {
-            this.name = "start";
+            this.Name = "start";
         }
         public override void Execute(int deep)
         {
-            switch (this.language.ToLower())
+            switch (this.Language.ToLower())
             {
                 case "c":
-                    this.code = @"#include <stdio.h>
+                    this.Code = @"#include <stdio.h>
 
 int main()
 {
@@ -28,7 +28,7 @@ int main()
 ";
                     break;
                 case "c++":
-                    this.code = @"#include <iostream>
+                    this.Code = @"#include <iostream>
 using namespace std;
 
 int main()
@@ -37,7 +37,7 @@ int main()
 ";
                     break;
                 case "c#":
-                    this.code = @"using System;
+                    this.Code = @"using System;
 
 namespace ConsoleApp1
 {
@@ -51,22 +51,22 @@ namespace ConsoleApp1
 ";
                     break;
                 case "java":
-                    this.code = @"public class Main {
+                    this.Code = @"public class Main {
     public static void main(String[] args) {
     }
 }
 ";
                     break;
                 case "python":
-                    this.code = @"if __name__ == '__main__':
+                    this.Code = @"if __name__ == '__main__':
     pass
 ";
                     break;
                 default:
-                    this.code = "";
+                    this.Code = "";
                     break;
             }
-            File.WriteAllText(this.fileName, code);
+            File.WriteAllText(this.FileName, Code);
         }
     }
 }

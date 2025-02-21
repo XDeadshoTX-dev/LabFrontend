@@ -25,13 +25,13 @@ namespace WpfApp2.backend.schemas.translate
             string closingBrace = match.Groups[4].Value;  // }
 
             string newContent = string.IsNullOrEmpty(content)
-                ? $"\n{block.getIndent(2)}{code}\n"
-                : $"\n{block.getIndent(3)}{content}\n{block.getIndent(2)}{code}\n";
+                ? $"\n{block.GetIndent(2)}{code}\n"
+                : $"\n{block.GetIndent(3)}{content}\n{block.GetIndent(2)}{code}\n";
 
-            return $"{mainSignature}\n{block.getIndent(2)}" +
+            return $"{mainSignature}\n{block.GetIndent(2)}" +
                 $"{openingBrace}" +
                 $"{newContent}" +
-                $"{block.getIndent(2)}{closingBrace}";
+                $"{block.GetIndent(2)}{closingBrace}";
         }
     }
 }

@@ -13,7 +13,7 @@ namespace LabBackend.Blocks.Actions
     {
         public InputBlock(string languageCode, string data) : base(languageCode, data)
         {
-            this.name = "InputBlock";
+            this.Name = "InputBlock";
         }
 
         private bool IsValidVariableName(string variableName)
@@ -23,29 +23,29 @@ namespace LabBackend.Blocks.Actions
 
         public override void Execute(int deep)
         {
-            if (!IsValidVariableName(this.content))
+            if (!IsValidVariableName(this.Content))
             {
                 Console.WriteLine("Invalid variable name format");
                 return;
             }
 
-            Console.WriteLine($"Executing {this.id} \"{this.name}\": {this.content}");
-            switch (this.language)
+            Console.WriteLine($"Executing {this.Id} \"{this.Name}\": {this.Content}");
+            switch (this.Language)
             {
                 case "c":
-                    this.code = $"{getIndent(deep)}scanf(\"%d\", &{this.content});";
+                    this.Code = $"{GetIndent(deep)}scanf(\"%d\", &{this.Content});";
                     break;
                 case "c++":
-                    this.code = $"{getIndent(deep)}cin >> {this.content};";
+                    this.Code = $"{GetIndent(deep)}cin >> {this.Content};";
                     break;
                 case "c#":
-                    this.code = $"{getIndent(deep)}{this.content} = int.Parse(Console.ReadLine());";
+                    this.Code = $"{GetIndent(deep)}{this.Content} = int.Parse(Console.ReadLine());";
                     break;
                 case "python":
-                    this.code = $"{getIndent(deep)}{this.content} = int(input())";
+                    this.Code = $"{GetIndent(deep)}{this.Content} = int(input())";
                     break;
                 case "java":
-                    this.code = $"{getIndent(deep)}{this.content} = Integer.parseInt(scan.nextLine());";
+                    this.Code = $"{GetIndent(deep)}{this.Content} = Integer.parseInt(scan.nextLine());";
                     break;
             }
         }

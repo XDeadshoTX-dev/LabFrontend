@@ -18,7 +18,7 @@ namespace LabBackend.Utils
         {
             foreach (var mainBlock in uiBlocks)
             {
-                if (mainBlock.getId() == fromID)
+                if (mainBlock.GetId() == fromID)
                 {
                     List<AbstractBlock> buffer = new List<AbstractBlock>();
 
@@ -26,7 +26,7 @@ namespace LabBackend.Utils
                     {
                         foreach (var slaveBlock in uiBlocks)
                         {
-                            if (slaveBlock.getId() == slaveBlockID)
+                            if (slaveBlock.GetId() == slaveBlockID)
                             {
                                 buffer.Add(slaveBlock);
                             }
@@ -41,13 +41,13 @@ namespace LabBackend.Utils
         {
             foreach (var mainBlock in uiBlocks)
             {
-                if (mainBlock.getId() == fromID)
+                if (mainBlock.GetId() == fromID)
                 {
                     List<AbstractBlock> buffer = new List<AbstractBlock>(mainBlock.Next);
 
                     foreach (var slaveBlockID in toID)
                     {
-                        buffer.RemoveAll(block => block.getId() == slaveBlockID);
+                        buffer.RemoveAll(block => block.GetId() == slaveBlockID);
                     }
                     mainBlock.Next = buffer.ToArray();
                 }
@@ -62,7 +62,7 @@ namespace LabBackend.Utils
             AbstractBlock startBlock = null;
             foreach (var block in uiBlocks)
             {
-                if (block.getNameBlock() == "start")
+                if (block.GetNameBlock() == "start")
                 {
                     startBlock = block;
                     break;
@@ -76,12 +76,12 @@ namespace LabBackend.Utils
 
             void Traverse(AbstractBlock currentBlock)
             {
-                if (currentBlock == null || visited.Contains(currentBlock.getId()))
+                if (currentBlock == null || visited.Contains(currentBlock.GetId()))
                 {
                     return;
                 }
 
-                visited.Add(currentBlock.getId());
+                visited.Add(currentBlock.GetId());
                 result.Add(currentBlock);
 
                 foreach (var nextBlock in currentBlock.Next)
@@ -132,7 +132,7 @@ namespace LabBackend.Utils
         {
             foreach (var block in uiLinkedBlocks)
             {
-                if (block.getId() == Id)
+                if (block.GetId() == Id)
                 {
                     return block;
                 }
