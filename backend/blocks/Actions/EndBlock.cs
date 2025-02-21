@@ -9,9 +9,9 @@ namespace LabBackend.Blocks.Actions
 {
     public class EndBlock : AbstractBlock
     {
-        public EndBlock(int Id) : base(Id, "")
+        public EndBlock(string languageCode) : base(languageCode, "")
         {
-            this.NameBlock = "end";
+            this.name = "end";
         }
 
         public override void Execute()

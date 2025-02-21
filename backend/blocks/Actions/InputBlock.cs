@@ -11,9 +11,9 @@ namespace LabBackend.Blocks.Actions
     // Клас для команди INPUT V
     public class InputBlock : AbstractBlock
     {
-        public InputBlock(int Id, string data) : base(Id, data)
+        public InputBlock(string languageCode, string data) : base(languageCode, data)
         {
-            this.NameBlock = "InputBlock";
+            this.name = "InputBlock";
         }
 
         private bool IsValidVariableName(string variableName)
@@ -21,31 +21,31 @@ namespace LabBackend.Blocks.Actions
             return Regex.IsMatch(variableName, @"^[a-zA-Z_]\w*$");
         }
 
-        public override void Execute(string programmingLanguage, int amountTabs)
+        public override void Execute(int amountTabs)
         {
-            if (!IsValidVariableName(this.Data))
+            if (!IsValidVariableName(this.content))
             {
                 Console.WriteLine("Invalid variable name format");
                 return;
             }
 
-            Console.WriteLine($"Executing {this.Id} \"{this.NameBlock}\": {this.Data}");
-            switch (programmingLanguage)
+            Console.WriteLine($"Executing {this.id} \"{this.name}\": {this.content}");
+            switch (this.language)
             {
-                case "C":
-                    Console.WriteLine($"{new string('\t', amountTabs)}scanf(\"%d\", &{this.Data});");
+                case "c":
+                    Console.WriteLine($"{new string('\t', amountTabs)}scanf(\"%d\", &{this.content});");
                     break;
-                case "C++":
-                    Console.WriteLine($"{new string('\t', amountTabs)}cin >> {this.Data};");
+                case "c++":
+                    Console.WriteLine($"{new string('\t', amountTabs)}cin >> {this.content};");
                     break;
-                case "C#":
-                    Console.WriteLine($"{new string('\t', amountTabs)}{this.Data} = int.Parse(Console.ReadLine());");
+                case "c#":
+                    Console.WriteLine($"{new string('\t', amountTabs)}{this.content} = int.Parse(Console.ReadLine());");
                     break;
-                case "Python":
-                    Console.WriteLine($"{new string('\t', amountTabs)}{this.Data} = int(input())");
+                case "python":
+                    Console.WriteLine($"{new string('\t', amountTabs)}{this.content} = int(input())");
                     break;
-                case "Java":
-                    Console.WriteLine($"{new string('\t', amountTabs)}{this.Data} = Integer.parseInt(scan.nextLine());");
+                case "java":
+                    Console.WriteLine($"{new string('\t', amountTabs)}{this.content} = Integer.parseInt(scan.nextLine());");
                     break;
             }
         }

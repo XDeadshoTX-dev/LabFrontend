@@ -17,10 +17,12 @@ namespace WpfApp2.frontend.utils
         public List<Block> blocks = new List<Block>();
         public Block sourceBlock;
         public Canvas WorkspaceCanvas;
+        Window window;
 
         public UIManager(Canvas workspace)
         {
             this.WorkspaceCanvas = workspace;
+            this.window = Application.Current.MainWindow;
         }
 
         private T FindVisualChild<T>(DependencyObject parent, Block block) where T : DependencyObject
@@ -76,6 +78,12 @@ namespace WpfApp2.frontend.utils
 
                 return block;
             }).ToList();
+        }
+
+        public string getLanguageCode()
+        {
+            var languageComboBox = window.FindName("LanguageComboBox") as ComboBox;
+            return languageComboBox.SelectedValue.ToString();
         }
     }
 }
