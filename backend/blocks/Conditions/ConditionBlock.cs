@@ -70,14 +70,17 @@ namespace LabBackend.Blocks.Conditions
             switch (this.Language)
             {
                 case "python":
-                    this.Code = @$"if {variableName} {usedDelimiter} {value}";
+                    this.Code = @$"if {variableName} {usedDelimiter} {value}:";
                     break;
                 case "c":
                 case "c++":
                 case "c#":
-                case "java":
                     this.Code = @$"if ({variableName} {usedDelimiter} {value})
 {{
+}}";
+                    break;
+                case "java":
+                    this.Code = @$"if ({variableName} {usedDelimiter} {value}) {{
 }}";
                     break;
                 default:

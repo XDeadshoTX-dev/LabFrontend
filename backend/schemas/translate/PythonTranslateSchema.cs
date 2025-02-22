@@ -1,10 +1,6 @@
 ﻿using LabBackend.Utils.Abstract;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using WpfApp2.backend.schemas.@abstract;
 
 namespace WpfApp2.backend.schemas.translate
@@ -13,12 +9,23 @@ namespace WpfApp2.backend.schemas.translate
     {
         public PythonTranslateSchema(int deep, AbstractBlock block)
         {
-            this.deepSchema = deep;
-            pattern = @"(static\s+void\s+Main\s*\(.*?\)\s*\{)(.*?)(\})";
+            this.deepSchema = deep + 1;
+            this.block = block;
+
+            pattern = @$"(^\s*if\s+__name__\s*==\s*['""]__main__['""]\s*:\s*\r?\n)(.*)$";
         }
+
         public override string InsertCode(Match match, string code)
         {
-            return string.Empty;
+            string mainDeclaration = match.Groups[1].Value;
+            string existingContent = match.Groups[2].Value;
+
+            string indent = block.GetIndent(this.deepSchema);
+            string newContent = this.block.Name != "end"
+                ? $"{mainDeclaration}{existingContent}{indent}{code}\n"
+                : $"{mainDeclaration}{existingContent}{indent}{code}";
+
+            return newContent;
         }
     }
 }

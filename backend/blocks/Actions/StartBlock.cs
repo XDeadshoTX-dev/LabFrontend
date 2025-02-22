@@ -59,7 +59,6 @@ namespace ConsoleApp1
                     break;
                 case "python":
                     this.Code = @"if __name__ == '__main__':
-    pass
 ";
                     break;
                 default:
