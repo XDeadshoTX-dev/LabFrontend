@@ -11,12 +11,12 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace LabBackend.Blocks.Actions
 {
-    // Клас для присвоєння значення V=C
     public class ConstantAssignmentBlock : AbstractBlock
     {
         public ConstantAssignmentBlock(string languageCode, string data) : base(languageCode, data)
         {
             this.Name = "ConstantAssignmentBlock";
+            this.PatternValidation = @"^([a-zA-Z_]\w*)=(\d+)$";
         }
         private bool IsValidAssignment(string data, ref string sanitizedData)
         {
@@ -27,9 +27,9 @@ namespace LabBackend.Blocks.Actions
 
             sanitizedData = sanitizeData(data);
 
-            if (Regex.IsMatch(sanitizedData, @"^([a-zA-Z_]\w*)=(\d+)$"))
+            if (Regex.IsMatch(sanitizedData, this.PatternValidation))
             {
-                var match = Regex.Match(sanitizedData, @"^([a-zA-Z_]\w*)=(\d+)$");
+                var match = Regex.Match(sanitizedData, this.PatternValidation);
                 int number = int.Parse(match.Groups[2].Value);
 
                 return number >= 0;
@@ -57,17 +57,17 @@ namespace LabBackend.Blocks.Actions
                 case "c++":
                 case "c#":
                 case "java":
-                    this.Code = $"{GetIndent(deep + 1)}int {variableName} = {value};";
+                    this.Code = $"int {variableName} = {value};";
                     break;
                 case "python":
-                    this.Code = $"{GetIndent(deep)}{variableName} = {value}";
+                    this.Code = $"{variableName} = {value}";
                     break;
                 default:
                     Console.WriteLine("Unknown programming language");
                     return;
             }
             string fileContent = this.ReadAllText();
-            string updatedContent = InsertCodeIntoMain(fileContent, this.Code);
+            string updatedContent = InsertCodeIntoMain(deep, fileContent);
             this.WriteAllText(updatedContent);
         }
     }

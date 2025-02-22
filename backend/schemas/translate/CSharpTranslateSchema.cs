@@ -14,25 +14,28 @@ namespace WpfApp2.backend.schemas.translate
 {
     class CSharpTranslateSchema : AbstractTranslateSchema
     {
-        public CSharpTranslateSchema()
+        public CSharpTranslateSchema(int deep, AbstractBlock block)
         {
-            pattern = @"(static\s+void\s+Main\s*\(.*?\))\s*(\{)(.*?)(\})";
+            this.deepSchema = deep + 3;
+            this.block = block;
+
+            string amountSpaces = this.block.GetIndent(this.deepSchema - 1);
+            pattern = $@"({amountSpaces}\{{)(.*?)(\n{amountSpaces}\}})";
         }
-        public override string InsertCode(Match match, string code, AbstractBlock block)
+        public override string InsertCode(Match match, string code)
         {
-            string mainSignature = match.Groups[1].Value; // static void Main(string[] args)
-            string openingBrace = match.Groups[2].Value;  // {
-            string content = match.Groups[3].Value.Trim(); // rawContent
-            string closingBrace = match.Groups[4].Value;  // }
+            string openingBrace = match.Groups[1].Value.Trim();  // {
+            string content = match.Groups[2].Value.Trim();       // raw content
+            string closingBrace = match.Groups[3].Value.Trim();  // }
 
             string newContent = string.IsNullOrEmpty(content)
-                ? $"\n{block.GetIndent(2)}{code}\n"
-                : $"\n{block.GetIndent(3)}{content}\n{block.GetIndent(2)}{code}\n";
+                ? $"\n{block.GetIndentCode(this.deepSchema)}\n"
+                : $"\n{block.GetIndent(this.deepSchema)}{content}\n{block.GetIndentCode(this.deepSchema)}\n";
 
-            return $"{mainSignature}\n{block.GetIndent(2)}" +
-                $"{openingBrace}" +
-                $"{newContent}" +
-                $"{block.GetIndent(2)}{closingBrace}";
+            return $"{block.GetIndent(this.deepSchema - 1)}" +
+                   $"{openingBrace}" +
+                   $"{newContent}" +
+                   $"{block.GetIndent(this.deepSchema - 1)}{closingBrace}";
         }
     }
 }

@@ -11,11 +11,12 @@ namespace WpfApp2.backend.schemas.translate
 {
     class PythonTranslateSchema : AbstractTranslateSchema
     {
-        public PythonTranslateSchema()
+        public PythonTranslateSchema(int deep, AbstractBlock block)
         {
+            this.deepSchema = deep;
             pattern = @"(static\s+void\s+Main\s*\(.*?\)\s*\{)(.*?)(\})";
         }
-        public override string InsertCode(Match match, string code, AbstractBlock block)
+        public override string InsertCode(Match match, string code)
         {
             return string.Empty;
         }

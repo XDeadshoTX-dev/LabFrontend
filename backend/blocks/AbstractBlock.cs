@@ -18,10 +18,13 @@ namespace LabBackend.Utils.Abstract
         public int Id { get; set; }
         public string Content { get; set; }
         public AbstractBlock[] Next { get; set; }
+
         protected string Language { get; set; }
         protected int LanguageIndent { get; set; }
-        protected string Code { get; set; }
+
         protected string FileName { get; set; }
+        protected string Code { get; set; }
+        protected string PatternValidation { get; set; }
 
         public AbstractBlock(string languageCode, string content)
         {
@@ -40,7 +43,7 @@ namespace LabBackend.Utils.Abstract
                     this.LanguageIndent = 4;
                     break;
             }
-            FileName = $"GeneratedCode.{GetFileExtension()}";
+            this.FileName = $"GeneratedCode.{GetFileExtension()}";
         }
         public virtual object Clone()
         {
@@ -84,6 +87,18 @@ namespace LabBackend.Utils.Abstract
         {
             return new string(' ', this.LanguageIndent * deep);
         }
+        public string GetIndentCode(int deep)
+        {
+            string indent = new string(' ', this.LanguageIndent * deep);
+            string[] lines = this.Code.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                lines[i] = indent + lines[i];
+            }
+
+            return string.Join(Environment.NewLine, lines);
+        }
         protected string ReadAllText()
         {
             return File.ReadAllText(this.FileName);
@@ -92,17 +107,26 @@ namespace LabBackend.Utils.Abstract
         {
             File.WriteAllText(this.FileName, content);
         }
-        protected string InsertCodeIntoMain(string fileContent, string codeToInsert)
+        protected string InsertCodeIntoMain(int deep, string fileContent)
         {
-            AbstractTranslateSchema translateSchema = AbstractTranslateSchema.GetSchema(this.Language);
+            AbstractTranslateSchema translateSchema = AbstractTranslateSchema.GetSchema(
+                deep, 
+                this.Language, 
+                this);
 
             string updatedContent = Regex.Replace(
                 fileContent,
                 translateSchema.pattern,
                 match =>
                 {
-                    AbstractTranslateSchema translateSchema = AbstractTranslateSchema.GetSchema(this.Language);
-                    string result = translateSchema.InsertCode(match, codeToInsert, this);
+                    AbstractTranslateSchema translateSchema = AbstractTranslateSchema.GetSchema(
+                        deep, 
+                        this.Language,
+                        this);
+
+                    string result = translateSchema.InsertCode( 
+                        match, 
+                        this.Code);
 
                     return result;
                 },

@@ -8,46 +8,61 @@ using System.Threading.Tasks;
 
 namespace LabBackend.Blocks.Actions
 {
-    // Клас для команди INPUT V
     public class InputBlock : AbstractBlock
     {
         public InputBlock(string languageCode, string data) : base(languageCode, data)
         {
             this.Name = "InputBlock";
+            this.PatternValidation = @"^[a-zA-Z_]\w*$";
         }
 
-        private bool IsValidVariableName(string variableName)
+        private bool IsValidAssignment(string data, ref string sanitizedData)
         {
-            return Regex.IsMatch(variableName, @"^[a-zA-Z_]\w*$");
+            string sanitizeData(string data)
+            {
+                return data.Replace(" ", "");
+            }
+
+            sanitizedData = sanitizeData(data);
+
+            if (Regex.IsMatch(sanitizedData, this.PatternValidation))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public override void Execute(int deep)
         {
-            if (!IsValidVariableName(this.Content))
+            string sanitizedData = string.Empty;
+            if (!IsValidAssignment(this.Content, ref sanitizedData))
             {
                 Console.WriteLine("Invalid variable name format");
                 return;
             }
 
-            Console.WriteLine($"Executing {this.Id} \"{this.Name}\": {this.Content}");
             switch (this.Language)
             {
                 case "c":
-                    this.Code = $"{GetIndent(deep)}scanf(\"%d\", &{this.Content});";
+                    this.Code = $"scanf(\"%d\", &{sanitizedData});";
                     break;
                 case "c++":
-                    this.Code = $"{GetIndent(deep)}cin >> {this.Content};";
+                    this.Code = $"cin >> {sanitizedData};";
                     break;
                 case "c#":
-                    this.Code = $"{GetIndent(deep)}{this.Content} = int.Parse(Console.ReadLine());";
+                    this.Code = $"{sanitizedData} = int.Parse(Console.ReadLine());";
                     break;
                 case "python":
-                    this.Code = $"{GetIndent(deep)}{this.Content} = int(input())";
+                    this.Code = $"{sanitizedData} = int(input())";
                     break;
                 case "java":
-                    this.Code = $"{GetIndent(deep)}{this.Content} = Integer.parseInt(scan.nextLine());";
+                    this.Code = $"{sanitizedData} = Integer.parseInt(scan.nextLine());";
                     break;
             }
+            string fileContent = this.ReadAllText();
+            string updatedContent = InsertCodeIntoMain(deep, fileContent);
+            this.WriteAllText(updatedContent);
         }
     }
 }

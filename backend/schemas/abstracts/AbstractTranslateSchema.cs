@@ -13,28 +13,30 @@ namespace WpfApp2.backend.schemas.@abstract
     abstract class AbstractTranslateSchema
     {
         public string pattern = string.Empty;
-        public abstract string InsertCode(Match match, string code, AbstractBlock block);
-        public static AbstractTranslateSchema GetSchema(string language)
+        protected int deepSchema = 0;
+        protected AbstractBlock block;
+        public abstract string InsertCode(Match match, string code);
+        public static AbstractTranslateSchema GetSchema(int deep, string language, AbstractBlock block)
         {
             if (language == "c")
             {
-                return new CTranslateSchema();
+                return new CTranslateSchema(deep, block);
             }
             else if (language == "c++")
             {
-                return new CPlusPlusTranslateSchema();
+                return new CPlusPlusTranslateSchema(deep, block);
             }
             else if (language == "c#")
             {
-                return new CSharpTranslateSchema();
+                return new CSharpTranslateSchema(deep, block);
             }
             else if (language == "java")
             {
-                return new JavaTranslateSchema();
+                return new JavaTranslateSchema(deep, block);
             }
             else if (language == "python")
             {
-                return new PythonTranslateSchema();
+                return new PythonTranslateSchema(deep, block);
             }
             return null;
         }

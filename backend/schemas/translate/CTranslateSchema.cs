@@ -11,11 +11,12 @@ namespace WpfApp2.backend.schemas.translate
 {
     class CTranslateSchema : AbstractTranslateSchema
     {
-        public CTranslateSchema()
+        public CTranslateSchema(int deep, AbstractBlock block)
         {
+            this.deepSchema = deep;
             pattern = @"(static\s+void\s+Main\s*\(.*?\)\s*\{)(.*?)(\})";
         }
-        public override string InsertCode(Match match, string code, AbstractBlock block)
+        public override string InsertCode(Match match, string code)
         {
             return string.Empty;
         }
