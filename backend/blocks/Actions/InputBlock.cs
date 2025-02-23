@@ -47,7 +47,8 @@ namespace LabBackend.Blocks.Actions
                     this.Code = $"scanf(\"%d\", &{sanitizedData});";
                     break;
                 case "c++":
-                    this.Code = $"cin >> {sanitizedData};";
+                    this.Code = @$"int {sanitizedData};
+cin >> {sanitizedData};";
                     break;
                 case "c#":
                     this.Code = $"{sanitizedData} = int.Parse(Console.ReadLine());";
