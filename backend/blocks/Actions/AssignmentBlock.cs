@@ -64,6 +64,7 @@ namespace LabBackend.Blocks.Actions
                 default:
                     throw new NotSupportedException($"Programming language '{this.Language}' is not supported.");
             }
+
             string fileContent = this.ReadAllText();
             string updatedContent = InsertCodeIntoMain(deep, fileContent);
             this.WriteAllText(updatedContent);

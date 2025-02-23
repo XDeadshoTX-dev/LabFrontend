@@ -65,6 +65,7 @@ namespace ConsoleApp1
                     this.Code = "";
                     break;
             }
+
             File.WriteAllText(this.FileName, Code);
         }
     }

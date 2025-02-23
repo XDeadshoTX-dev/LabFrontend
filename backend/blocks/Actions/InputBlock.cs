@@ -15,7 +15,6 @@ namespace LabBackend.Blocks.Actions
             this.Name = "InputBlock";
             this.PatternValidation = @"^[a-zA-Z_]\w*$";
         }
-
         private bool IsValidAssignment(string data, ref string sanitizedData)
         {
             string sanitizeData(string data)
@@ -60,6 +59,7 @@ namespace LabBackend.Blocks.Actions
                     this.Code = $"{sanitizedData} = Integer.parseInt(scan.nextLine());";
                     break;
             }
+
             string fileContent = this.ReadAllText();
             string updatedContent = InsertCodeIntoMain(deep, fileContent);
             this.WriteAllText(updatedContent);

@@ -19,7 +19,7 @@ namespace LabBackend.Utils.Abstract
         public string Content { get; set; }
         public AbstractBlock[] Next { get; set; }
 
-        protected string Language { get; set; }
+        public string Language { get; set; }
         protected int LanguageIndent { get; set; }
 
         protected string FileName { get; set; }
@@ -111,7 +111,6 @@ namespace LabBackend.Utils.Abstract
         {
             AbstractTranslateSchema translateSchema = AbstractTranslateSchema.GetSchema(
                 deep, 
-                this.Language, 
                 this);
 
             string updatedContent = Regex.Replace(
@@ -121,13 +120,11 @@ namespace LabBackend.Utils.Abstract
                 {
                     AbstractTranslateSchema translateSchema = AbstractTranslateSchema.GetSchema(
                         deep, 
-                        this.Language,
                         this);
 
                     string result = translateSchema.InsertCode( 
                         match,
-                        fileContent,
-                        this.Code);
+                        fileContent);
 
                     return result;
                 },

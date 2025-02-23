@@ -31,7 +31,6 @@ namespace LabBackend.Blocks.Actions
 
             return false;
         }
-
         public override void Execute(int deep)
         {
             string sanitizedData = string.Empty;
@@ -59,6 +58,7 @@ namespace LabBackend.Blocks.Actions
                     this.Code = $"System.out.println({sanitizedData});";
                     break;
             }
+
             string fileContent = this.ReadAllText();
             string updatedContent = InsertCodeIntoMain(deep, fileContent);
             this.WriteAllText(updatedContent);

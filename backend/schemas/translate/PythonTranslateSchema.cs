@@ -11,20 +11,19 @@ namespace WpfApp2.backend.schemas.translate
         {
             this.deepSchema = deep + 1;
             this.block = block;
-
             this.regOptions = RegexOptions.Singleline | RegexOptions.IgnoreCase;
+
             pattern = @$"(^\s*if\s+__name__\s*==\s*['""]__main__['""]\s*:\s*\r?\n)(.*)$";
         }
 
-        public override string InsertCode(Match match, string fileContent, string code)
+        public override string InsertCode(Match match, string fileContent)
         {
             string mainDeclaration = match.Groups[1].Value;
             string existingContent = match.Groups[2].Value;
 
-            string indent = block.GetIndent(this.deepSchema);
             string newContent = this.block.Name != "end"
-                ? $"{mainDeclaration}{existingContent}{indent}{code}\n"
-                : $"{mainDeclaration}{existingContent}{indent}{code}";
+                ? $"{mainDeclaration}{existingContent}{this.block.GetIndentCode(this.deepSchema)}\n"
+                : $"{mainDeclaration}{existingContent}{this.block.GetIndentCode(this.deepSchema)}";
 
             return newContent;
         }

@@ -18,25 +18,25 @@ namespace WpfApp2.backend.schemas.translate
         {
             this.deepSchema = deep + 3;
             this.block = block;
-
             this.regOptions = RegexOptions.Singleline | RegexOptions.IgnoreCase;
+
             string amountSpaces = this.block.GetIndent(this.deepSchema - 1);
             pattern = $@"({amountSpaces}\{{)(.*?)(\n{amountSpaces}\}})";
         }
-        public override string InsertCode(Match match, string fileContent, string code)
+        public override string InsertCode(Match match, string fileContent)
         {
             string openingBrace = match.Groups[1].Value.Trim();  // {
             string content = match.Groups[2].Value.Trim();       // raw content
             string closingBrace = match.Groups[3].Value.Trim();  // }
 
             string newContent = string.IsNullOrEmpty(content)
-                ? $"\n{block.GetIndentCode(this.deepSchema)}\n"
-                : $"\n{block.GetIndent(this.deepSchema)}{content}\n{block.GetIndentCode(this.deepSchema)}\n";
+                ? $"\n{this.block.GetIndentCode(this.deepSchema)}\n"
+                : $"\n{this.block.GetIndent(this.deepSchema)}{content}\n{block.GetIndentCode(this.deepSchema)}\n";
 
-            return $"{block.GetIndent(this.deepSchema - 1)}" +
+            return $"{this.block.GetIndent(this.deepSchema - 1)}" +
                    $"{openingBrace}" +
                    $"{newContent}" +
-                   $"{block.GetIndent(this.deepSchema - 1)}{closingBrace}";
+                   $"{this.block.GetIndent(this.deepSchema - 1)}{closingBrace}";
         }
     }
 }

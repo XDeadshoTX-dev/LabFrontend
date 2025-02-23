@@ -66,6 +66,7 @@ namespace LabBackend.Blocks.Actions
                     Console.WriteLine("Unknown programming language");
                     return;
             }
+
             string fileContent = this.ReadAllText();
             string updatedContent = InsertCodeIntoMain(deep, fileContent);
             this.WriteAllText(updatedContent);
