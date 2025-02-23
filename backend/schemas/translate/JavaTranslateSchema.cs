@@ -17,31 +17,27 @@ namespace WpfApp2.backend.schemas.translate
             this.block = block;
 
             int currentBrace = this.deepSchema + 1;
-            pattern = $@"^(?<line>(?:[^\{{]*\{{){{{currentBrace}}}.*)$";
-
+            //pattern = $@"^(?<line>(?:[^\{{]*\{{){{{currentBrace}}})(?<content>[\s\S]*)$";
+            pattern = $@"^(?<line>(?:[^\{{]*\{{){{{currentBrace}}})(?<content>[\s\S]*?)(\}})";
         }
         public override string InsertCode(Match match, string fileContent, string code)
         {
             // Извлекаем строку (или блок), в котором найдено нужное вхождение фигурных скобок.
             string targetLine = match.Groups["line"].Value;
+            string contentAfterBrace = match.Groups["content"].Value.Trim();
 
-            // Разбиваем targetLine на отдельные строки. Добавляем разделитель "\r" для совместимости.
-            string[] lines = targetLine.Split(new[] { "\r\n", "\n", "\r" }, StringSplitOptions.None);
+            // Добавляем новый код после открывающей скобки с правильным отступом
+            string modifiedContent = string.IsNullOrEmpty(contentAfterBrace) 
+                                    ?  targetLine + "\n" +
+                                       contentAfterBrace +
+                                       $"{this.block.GetIndentCode(this.deepSchema + 1)}" + "\n" +
+                                       $"{this.block.GetIndent(this.deepSchema)}}}"
+                                    : targetLine + "\n" +
+                                       $"{this.block.GetIndent(this.deepSchema + 1)}{contentAfterBrace}" +
+                                       $"\n{this.block.GetIndentCode(this.deepSchema + 1)}" + 
+                                       $"\n{this.block.GetIndent(this.deepSchema)}}}";
 
-            // Извлекаем последнюю строку.
-            string lastLine = lines.Last();
-
-            // Обработка: добавляем в конец последней строки дополнительный код с нужным отступом.
-            string modifiedLastLine = lastLine + $"{this.block.GetIndent(this.deepSchema + 1)}" + code;
-
-            // Заменяем последнюю строку в массиве.
-            lines[lines.Length - 1] = modifiedLastLine;
-
-            // Собираем строки обратно с использованием текущего разделителя строк.
-            string modifiedTargetLine = string.Join(Environment.NewLine, lines);
-
-            return modifiedTargetLine;
+            return modifiedContent;
         }
-
     }
 }
