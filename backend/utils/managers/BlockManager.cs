@@ -54,8 +54,12 @@ namespace LabBackend.Utils
 
             return result;
         }
-        public Block GetBlockById(List<Block> uiBlocks, int findId)
+        public Block GetBlockById(List<Block> uiBlocks, int? findId)
         {
+            //return uiBlocks
+            //            .Select(block => block)
+            //            .Where(block => block.Id == findId)
+            //            .FirstOrDefault();
             return uiBlocks.Find(block => block.Id == findId);
         }
         public List<Block> GetLinkedFrontendBlocks(List<Block> blocksRAWFrontend)
@@ -77,10 +81,7 @@ namespace LabBackend.Utils
             {
                 if (currentBlock.Type != "if")
                 {
-                    Block nextBlock = blocksRAWFrontend
-                        .Select(block => block)
-                        .Where(block => block.Id == currentBlock.NextBlockId)
-                        .FirstOrDefault();
+                    Block nextBlock = GetBlockById(blocksRAWFrontend, currentBlock.NextBlockId);
                     currentBlock.Id = newId;
                     result.Add(currentBlock);
 
@@ -102,14 +103,8 @@ namespace LabBackend.Utils
                 }
                 else
                 {
-                    Block trueBlock = blocksRAWFrontend
-                       .Select(block => block)
-                       .Where(block => block.Id == currentBlock.TrueBlockId)
-                       .FirstOrDefault();
-                    Block falseBlock = blocksRAWFrontend
-                       .Select(block => block)
-                       .Where(block => block.Id == currentBlock.FalseBlockId)
-                       .FirstOrDefault();
+                    Block trueBlock = GetBlockById(blocksRAWFrontend, currentBlock.TrueBlockId);
+                    Block falseBlock = GetBlockById(blocksRAWFrontend, currentBlock.FalseBlockId);
 
                     currentBlock.Id = newId;
                     newId++;
@@ -165,7 +160,7 @@ namespace LabBackend.Utils
 
             void Traverse(int currentId)
             {
-                Block frontendBlock = linkedFrontendBlocks.Find(block => block.Id == currentId);
+                Block frontendBlock = GetBlockById(linkedFrontendBlocks, currentId);
                 AbstractBlock backendBlock;
 
                 switch (frontendBlock.Type)
