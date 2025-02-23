@@ -15,7 +15,7 @@ namespace LabBackend.Blocks.Actions
             this.Name = "PrintBlock";
             this.PatternValidation = @"^[a-zA-Z_]\w*$";
         }
-        private bool IsValidAssignment(string data, ref string sanitizedData)
+        private bool IsValidAssignment(string data, ref string sanitizedData, List<string> bufferVariables)
         {
             string sanitizeData(string data)
             {
@@ -31,13 +31,12 @@ namespace LabBackend.Blocks.Actions
 
             return false;
         }
-        public override void Execute(int deep)
+        public override string Execute(int deep, List<string> bufferVariables)
         {
             string sanitizedData = string.Empty;
-            if (!IsValidAssignment(this.Content, ref sanitizedData))
+            if (!IsValidAssignment(this.Content, ref sanitizedData, bufferVariables))
             {
-                Console.WriteLine("Invalid variable name format");
-                return;
+                return "error";
             }
 
             switch (this.Language)
@@ -62,6 +61,8 @@ namespace LabBackend.Blocks.Actions
             string fileContent = this.ReadAllText();
             string updatedContent = InsertCodeIntoMain(deep, fileContent);
             this.WriteAllText(updatedContent);
+
+            return sanitizedData;
         }
     }
 }

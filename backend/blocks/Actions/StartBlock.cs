@@ -15,7 +15,7 @@ namespace LabBackend.Blocks.Actions
         {
             this.Name = "start";
         }
-        public override void Execute(int deep)
+        public override string Execute(int deep, List<string> bufferVariables)
         {
             switch (this.Language.ToLower())
             {
@@ -67,6 +67,8 @@ namespace ConsoleApp1
             }
 
             File.WriteAllText(this.FileName, Code);
+
+            return this.Name;
         }
     }
 }

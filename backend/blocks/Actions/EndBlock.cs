@@ -13,7 +13,7 @@ namespace LabBackend.Blocks.Actions
         {
             this.Name = "end";
         }
-        public override void Execute(int deep)
+        public override string Execute(int deep, List<string> bufferVariables)
         {
             switch (this.Language)
             {
@@ -40,6 +40,8 @@ namespace LabBackend.Blocks.Actions
             string fileContent = this.ReadAllText();
             string updatedContent = InsertCodeIntoMain(deep, fileContent);
             this.WriteAllText(updatedContent);
+
+            return this.Name;
         }
     }
 }

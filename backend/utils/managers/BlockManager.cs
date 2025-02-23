@@ -153,8 +153,9 @@ namespace LabBackend.Utils
 
             return matrix;
         }
-        public void TranslateCode(string languageCode, List<Block> linkedFrontendBlocks, Dictionary<int, Dictionary<int, bool>> adjacencyMatrix)
+        public string TranslateCode(string languageCode, List<Block> linkedFrontendBlocks, Dictionary<int, Dictionary<int, bool>> adjacencyMatrix)
         {
+            List<string> bufferVariables = new List<string>();
             int startId = adjacencyMatrix.Keys.First();
             int deep = 0;
 
@@ -189,7 +190,9 @@ namespace LabBackend.Utils
                     default:
                         throw new NotSupportedException($"Block type '{frontendBlock.Type}' is not supported.");
                 }
-                backendBlock.Execute(deep);
+                string response = backendBlock.Execute(deep, bufferVariables);
+
+                bufferVariables.Add(response);
 
                 if (frontendBlock.Type == "if")
                 {
@@ -217,7 +220,7 @@ namespace LabBackend.Utils
             }
 
             Traverse(startId);
-            return;
+            return string.Empty;
         }
     }
 }

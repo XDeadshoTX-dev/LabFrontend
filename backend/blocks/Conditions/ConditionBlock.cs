@@ -42,13 +42,13 @@ namespace LabBackend.Blocks.Conditions
             return false;
         }
 
-        public override void Execute(int deep)
+        public override string Execute(int deep, List<string> bufferVariables)
         {
             string sanitizedData = string.Empty;
             if (!IsValidCondition(this.Content, ref sanitizedData))
             {
                 Console.WriteLine("Invalid condition format");
-                return;
+                return "error";
             }
 
             string[] delimiters = { "<", "==" };
@@ -85,12 +85,14 @@ namespace LabBackend.Blocks.Conditions
                     break;
                 default:
                     Console.WriteLine("Unknown programming language");
-                    return;
+                    return "error";
             }
 
             string fileContent = this.ReadAllText();
             string updatedContent = InsertCodeIntoMain(deep, fileContent);
             this.WriteAllText(updatedContent);
+
+            return variableName;
         }
     }
 }

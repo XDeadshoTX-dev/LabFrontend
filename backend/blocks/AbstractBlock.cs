@@ -136,8 +136,9 @@ namespace LabBackend.Utils.Abstract
         public virtual void Execute()
         {
         }
-        public virtual void Execute(int amountTabs)
+        public virtual string Execute(int deep, List<string> bufferVariables)
         {
+            return string.Empty;
         }
     }
 }

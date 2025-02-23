@@ -18,18 +18,25 @@ namespace LabBackend.Blocks.Actions
             this.Name = "ConstantAssignmentBlock";
             this.PatternValidation = @"^([a-zA-Z_]\w*)=(\d+)$";
         }
-        private bool IsValidAssignment(string data, ref string sanitizedData)
+        private bool IsValidAssignment(string data, ref string sanitizedData, List<string> bufferVariables)
         {
             string sanitizeData(string data)
             {
                 return data.Replace(" ", "");
             }
 
-            sanitizedData = sanitizeData(data);
+            string sanitized = sanitizeData(data);
+            sanitizedData = sanitized;
 
             if (Regex.IsMatch(sanitizedData, this.PatternValidation))
             {
                 var match = Regex.Match(sanitizedData, this.PatternValidation);
+                
+                if (bufferVariables.Exists(item => item == match.Groups[1].Value))
+                {
+                    return false;
+                }
+
                 int number = int.Parse(match.Groups[2].Value);
 
                 return number >= 0;
@@ -38,13 +45,12 @@ namespace LabBackend.Blocks.Actions
             return false;
         }
 
-        public override void Execute(int deep)
+        public override string Execute(int deep, List<string> bufferVariables)
         {
             string sanitizedData = string.Empty;
-            if (!IsValidAssignment(this.Content, ref sanitizedData))
+            if (!IsValidAssignment(this.Content, ref sanitizedData, bufferVariables))
             {
-                Console.WriteLine("Invalid assignment format");
-                return;
+                return "error";
             }
 
             string[] parts = this.Content.Split('=');
@@ -64,12 +70,14 @@ namespace LabBackend.Blocks.Actions
                     break;
                 default:
                     Console.WriteLine("Unknown programming language");
-                    return;
+                    return "error";
             }
 
             string fileContent = this.ReadAllText();
             string updatedContent = InsertCodeIntoMain(deep, fileContent);
             this.WriteAllText(updatedContent);
+
+            return variableName;
         }
     }
 }
