@@ -12,6 +12,7 @@ namespace WpfApp2.backend.schemas.translate
             this.deepSchema = deep + 1;
             this.block = block;
 
+            this.regOptions = RegexOptions.Singleline | RegexOptions.IgnoreCase;
             pattern = @$"(^\s*if\s+__name__\s*==\s*['""]__main__['""]\s*:\s*\r?\n)(.*)$";
         }
 

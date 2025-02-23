@@ -16,6 +16,7 @@ namespace WpfApp2.backend.schemas.translate
             this.deepSchema = deep + 1;
             this.block = block;
 
+            this.regOptions = RegexOptions.Multiline;
             int currentBrace = this.deepSchema + 1;
             int amountSpaces = 4 * this.deepSchema;
             pattern = $@"^\s{{{amountSpaces}}}(?<before>[^\{{]*)\{{\s*\n(?<rawContent>[\s\S]*?)^\s{{{amountSpaces}}}\}}";

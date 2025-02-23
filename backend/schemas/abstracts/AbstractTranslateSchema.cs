@@ -13,8 +13,11 @@ namespace WpfApp2.backend.schemas.@abstract
     abstract class AbstractTranslateSchema
     {
         public string pattern = string.Empty;
+        public RegexOptions regOptions;
+
         protected int deepSchema = 0;
         protected AbstractBlock block;
+
         public abstract string InsertCode(Match match, string fileContent, string code);
         public static AbstractTranslateSchema GetSchema(int deep, string language, AbstractBlock block)
         {

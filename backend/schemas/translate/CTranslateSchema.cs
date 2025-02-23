@@ -16,6 +16,7 @@ namespace WpfApp2.backend.schemas.translate
             this.deepSchema = deep;
             this.block = block;
 
+            this.regOptions = RegexOptions.Singleline | RegexOptions.IgnoreCase;
             string amountSpaces = this.block.GetIndent(this.deepSchema);
             pattern = $@"({amountSpaces}\{{)(.*?)(\n{amountSpaces}\}})";
         }

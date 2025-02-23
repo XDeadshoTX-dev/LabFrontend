@@ -131,7 +131,7 @@ namespace LabBackend.Utils.Abstract
 
                     return result;
                 },
-                RegexOptions.Multiline
+                translateSchema.regOptions
             );
 
             return updatedContent;
