@@ -8,45 +8,60 @@ using System.Threading.Tasks;
 
 namespace LabBackend.Blocks.Actions
 {
-    // Клас для команди PRINT V
     public class PrintBlock : AbstractBlock
     {
         public PrintBlock(string languageCode, string data) : base(languageCode, data)
         {
-            this.name = "PrintBlock";
+            this.Name = "PrintBlock";
+            this.PatternValidation = @"^[a-zA-Z_]\w*$";
         }
-        private bool IsValidVariableName(string variableName)
+        private bool IsValidAssignment(string data, ref string sanitizedData)
         {
-            return Regex.IsMatch(variableName, @"^[a-zA-Z_]\w*$");
-        }
+            string sanitizeData(string data)
+            {
+                return data.Replace(" ", "");
+            }
 
-        public override void Execute(int amountTabs)
+            sanitizedData = sanitizeData(data);
+
+            if (Regex.IsMatch(sanitizedData, this.PatternValidation))
+            {
+                return true;
+            }
+
+            return false;
+        }
+        public override void Execute(int deep)
         {
-            if (!IsValidVariableName(this.content))
+            string sanitizedData = string.Empty;
+            if (!IsValidAssignment(this.Content, ref sanitizedData))
             {
                 Console.WriteLine("Invalid variable name format");
                 return;
             }
 
-            Console.WriteLine($"Printing {this.id} \"{this.name}\": {this.content}");
-            switch (this.language)
+            switch (this.Language)
             {
                 case "c":
-                    Console.WriteLine($"{new string('\t', amountTabs)}printf(\"%s\", {this.content});");
+                    this.Code = $"printf(\"%s\", {sanitizedData});";
                     break;
                 case "c++":
-                    Console.WriteLine($"{new string('\t', amountTabs)}std::cout << {this.content} << std::endl;");
+                    this.Code = $"std::cout << {sanitizedData} << std::endl;";
                     break;
                 case "c#":
-                    Console.WriteLine($"{new string('\t', amountTabs)}Console.WriteLine({this.content});");
+                    this.Code = $"Console.WriteLine({sanitizedData});";
                     break;
                 case "python":
-                    Console.WriteLine($"{new string('\t', amountTabs)}print({this.content});");
+                    this.Code = $"print({sanitizedData});";
                     break;
                 case "java":
-                    Console.WriteLine($"{new string('\t', amountTabs)}System.out.println({this.content});");
+                    this.Code = $"System.out.println({sanitizedData});";
                     break;
             }
+
+            string fileContent = this.ReadAllText();
+            string updatedContent = InsertCodeIntoMain(deep, fileContent);
+            this.WriteAllText(updatedContent);
         }
     }
 }

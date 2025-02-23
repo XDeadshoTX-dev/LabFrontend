@@ -11,12 +11,35 @@ namespace LabBackend.Blocks.Actions
     {
         public EndBlock(string languageCode) : base(languageCode, "")
         {
-            this.name = "end";
+            this.Name = "end";
         }
-
-        public override void Execute()
+        public override void Execute(int deep)
         {
-            Console.WriteLine("Start block executed");
+            switch (this.Language)
+            {
+                case "c":
+                    this.Code = "exit(0);";
+                    break;
+                case "c++":
+                    this.Code = "exit(0);";
+                    break;
+                case "c#":
+                    this.Code = "Environment.Exit(0);";
+                    break;
+                case "python":
+                    this.Code = "exit()";
+                    break;
+                case "java":
+                    this.Code = "System.exit(0);";
+                    break;
+                default:
+                    this.Code = "// Unsupported language";
+                    break;
+            }
+
+            string fileContent = this.ReadAllText();
+            string updatedContent = InsertCodeIntoMain(deep, fileContent);
+            this.WriteAllText(updatedContent);
         }
     }
 }

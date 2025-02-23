@@ -18,7 +18,7 @@ namespace LabBackend.Utils
         {
             foreach (var mainBlock in uiBlocks)
             {
-                if (mainBlock.getId() == fromID)
+                if (mainBlock.GetId() == fromID)
                 {
                     List<AbstractBlock> buffer = new List<AbstractBlock>();
 
@@ -26,7 +26,7 @@ namespace LabBackend.Utils
                     {
                         foreach (var slaveBlock in uiBlocks)
                         {
-                            if (slaveBlock.getId() == slaveBlockID)
+                            if (slaveBlock.GetId() == slaveBlockID)
                             {
                                 buffer.Add(slaveBlock);
                             }
@@ -41,13 +41,13 @@ namespace LabBackend.Utils
         {
             foreach (var mainBlock in uiBlocks)
             {
-                if (mainBlock.getId() == fromID)
+                if (mainBlock.GetId() == fromID)
                 {
                     List<AbstractBlock> buffer = new List<AbstractBlock>(mainBlock.Next);
 
                     foreach (var slaveBlockID in toID)
                     {
-                        buffer.RemoveAll(block => block.getId() == slaveBlockID);
+                        buffer.RemoveAll(block => block.GetId() == slaveBlockID);
                     }
                     mainBlock.Next = buffer.ToArray();
                 }
@@ -62,7 +62,7 @@ namespace LabBackend.Utils
             AbstractBlock startBlock = null;
             foreach (var block in uiBlocks)
             {
-                if (block.getNameBlock() == "start")
+                if (block.GetNameBlock() == "start")
                 {
                     startBlock = block;
                     break;
@@ -76,12 +76,12 @@ namespace LabBackend.Utils
 
             void Traverse(AbstractBlock currentBlock)
             {
-                if (currentBlock == null || visited.Contains(currentBlock.getId()))
+                if (currentBlock == null || visited.Contains(currentBlock.GetId()))
                 {
                     return;
                 }
 
-                visited.Add(currentBlock.getId());
+                visited.Add(currentBlock.GetId());
                 result.Add(currentBlock);
 
                 foreach (var nextBlock in currentBlock.Next)
@@ -94,7 +94,7 @@ namespace LabBackend.Utils
 
             return result;
         }
-        public List<Block> getLinkedFrontendBlocks(List<Block> blocksRAWFrontend)
+        public List<Block> GetLinkedFrontendBlocks(List<Block> blocksRAWFrontend)
         {
             List<Block> result = new List<Block>();
             Block startBlock = blocksRAWFrontend[0];
@@ -132,14 +132,14 @@ namespace LabBackend.Utils
         {
             foreach (var block in uiLinkedBlocks)
             {
-                if (block.getId() == Id)
+                if (block.GetId() == Id)
                 {
                     return block;
                 }
             }
             return null;
         }
-        public Dictionary<int, Dictionary<int, bool>> createAdjacencyMatrix(List<Block> linkedFrontendBlocks)
+        public Dictionary<int, Dictionary<int, bool>> CreateAdjacencyMatrix(List<Block> linkedFrontendBlocks)
         {
             Dictionary<int, Dictionary<int, bool>> matrix = new Dictionary<int, Dictionary<int, bool>>();
             Stack<int> buffer = new Stack<int>();
@@ -227,16 +227,18 @@ namespace LabBackend.Utils
             }
             return matrix;
         }
-        public void translateCode(string languageCode, List<Block> linkedFrontendBlocks, Dictionary<int, Dictionary<int, bool>> adjacencyMatrix)
+        public void TranslateCode(string languageCode, List<Block> linkedFrontendBlocks, Dictionary<int, Dictionary<int, bool>> adjacencyMatrix)
         {
             int startId = adjacencyMatrix.Keys.First();
+            Dictionary<int, int> test = new Dictionary<int, int>();
+            int deep = 0;
 
             void Traverse(int currentId)
             {
                 Block frontendBlock = linkedFrontendBlocks.Find(block => block.Id == currentId);
                 AbstractBlock backendBlock;
 
-                switch(frontendBlock.Type)
+                switch (frontendBlock.Type)
                 {
                     case "start":
                         backendBlock = new StartBlock(languageCode);
@@ -262,8 +264,31 @@ namespace LabBackend.Utils
                     default:
                         throw new NotSupportedException($"Block type '{frontendBlock.Type}' is not supported.");
                 }
+                backendBlock.Execute(deep);
 
-                backendBlock.Execute();
+                if (frontendBlock.Type == "if")
+                {
+                    deep++;
+                }
+                bool isFalsePart = false;
+                foreach (var nextId in adjacencyMatrix[currentId].Keys)
+                {
+                    if (isFalsePart)
+                    {
+                        deep--;
+                        Traverse(nextId);
+                        isFalsePart = false;
+                    }
+                    else
+                    {
+                        Traverse(nextId);
+                        isFalsePart = true;
+                    }
+                }
+                if (isFalsePart && frontendBlock.Type == "if")
+                {
+                    deep--;
+                }
             }
 
             Traverse(startId);

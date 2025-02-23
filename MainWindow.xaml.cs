@@ -53,7 +53,7 @@ namespace BlockLinkingApp
             LanguageComboBox.Items.Add("C#");
             LanguageComboBox.Items.Add("Java");
             LanguageComboBox.Items.Add("Python");
-            LanguageComboBox.SelectedIndex = 0;
+            LanguageComboBox.SelectedIndex = 3;
         }
 
         private void AddBlockButton_Click(object sender, RoutedEventArgs e)
@@ -306,9 +306,9 @@ namespace BlockLinkingApp
             IManager blockManager = new BlockManager();
 
             List<Block> blocksRAWFrontend = uiManager.getBlocks();
-            List<Block> linkedFrontendBlocks = blockManager.getLinkedFrontendBlocks(blocksRAWFrontend);
-            Dictionary<int, Dictionary<int, bool>> adjacencyMatrix = blockManager.createAdjacencyMatrix(linkedFrontendBlocks);
-            blockManager.translateCode(uiManager.getLanguageCode(), linkedFrontendBlocks, adjacencyMatrix);
+            List<Block> linkedFrontendBlocks = blockManager.GetLinkedFrontendBlocks(blocksRAWFrontend);
+            Dictionary<int, Dictionary<int, bool>> adjacencyMatrix = blockManager.CreateAdjacencyMatrix(linkedFrontendBlocks);
+            blockManager.TranslateCode(uiManager.getLanguageCode(), linkedFrontendBlocks, adjacencyMatrix);
         }
 
         private Brush GetBlockBackground(string type)

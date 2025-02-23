@@ -8,6 +8,6 @@ namespace LabBackend.Utils.Interfaces
 {
     public interface IIdentifiable
     {
-        public string generateID();
+        public string GenerateID();
     }
 }

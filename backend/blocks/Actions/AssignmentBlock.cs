@@ -8,28 +8,39 @@ using System.Threading.Tasks;
 
 namespace LabBackend.Blocks.Actions
 {
-    // Клас для присвоєння значення V1=V2
     public class AssignmentBlock : AbstractBlock
     {
         public AssignmentBlock(string languageCode, string data) : base(languageCode, data)
         {
-            this.name = "AssignmentBlock";
+            this.Name = "AssignmentBlock";
+            this.PatternValidation = @"^([a-zA-Z_]\w*)=([a-zA-Z_]\w*)$";
         }
-        private bool IsValidAssignment(string data)
+        private bool IsValidAssignment(string data, ref string sanitizedData)
         {
-            return Regex.IsMatch(data, @"^([a-zA-Z_]\w*)=([a-zA-Z_]\w*)$");
+            string sanitizeData(string data)
+            {
+                return data.Replace(" ", "");
+            }
+
+            sanitizedData = sanitizeData(data);
+
+            if (Regex.IsMatch(sanitizedData, this.PatternValidation))
+            {
+                return true;
+            }
+
+            return false;
         }
-        public override void Execute(int amountTabs)
+        public override void Execute(int deep)
         {
-            if (!IsValidAssignment(this.content))
+            string sanitizedData = string.Empty;
+            if (!IsValidAssignment(this.Content, ref sanitizedData))
             {
                 Console.WriteLine("Invalid assignment format");
                 return;
             }
 
-            Console.WriteLine($"Executing {this.id} \"{this.name}\": {this.content}");
-            string indent = new string('\t', amountTabs);
-            string[] variables = this.content.Split('=');
+            string[] variables = this.Content.Split('=');
             if (variables.Length != 2)
             {
                 throw new ArgumentException("Data should be in format 'V1=V2'");
@@ -37,24 +48,26 @@ namespace LabBackend.Blocks.Actions
             string v1 = variables[0].Trim();
             string v2 = variables[1].Trim();
 
-            StringBuilder code = new StringBuilder();
-            switch (this.language)
+            switch (this.Language)
             {
                 case "c":
-                    code.AppendLine($"{indent}strcpy({v1}, {v2});");
+                    this.Code = $"strcpy({v1}, {v2});";
                     break;
                 case "c++":
                 case "c#":
                 case "java":
-                    code.AppendLine($"{indent}{v1} = {v2};");
+                    this.Code = $"{v1} = {v2};";
                     break;
                 case "python":
-                    code.AppendLine($"{indent}{v1} = {v2}");
+                    this.Code = $"{v1} = {v2}";
                     break;
                 default:
-                    throw new NotSupportedException($"Programming language '{this.language}' is not supported.");
+                    throw new NotSupportedException($"Programming language '{this.Language}' is not supported.");
             }
-            Console.WriteLine(code.ToString());
+
+            string fileContent = this.ReadAllText();
+            string updatedContent = InsertCodeIntoMain(deep, fileContent);
+            this.WriteAllText(updatedContent);
         }
     }
 }
