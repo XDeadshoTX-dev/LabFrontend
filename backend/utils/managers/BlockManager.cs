@@ -14,46 +14,6 @@ namespace LabBackend.Utils
 {
     public class BlockManager : IManager
     {
-        public void SetLink(List<AbstractBlock> uiBlocks, int fromID, int[] toID)
-        {
-            foreach (var mainBlock in uiBlocks)
-            {
-                if (mainBlock.GetId() == fromID)
-                {
-                    List<AbstractBlock> buffer = new List<AbstractBlock>();
-
-                    foreach (var slaveBlockID in toID)
-                    {
-                        foreach (var slaveBlock in uiBlocks)
-                        {
-                            if (slaveBlock.GetId() == slaveBlockID)
-                            {
-                                buffer.Add(slaveBlock);
-                            }
-                        }
-                    }
-                    mainBlock.Next = buffer.ToArray();
-                }
-            }
-        }
-
-        public void RemoveLink(List<AbstractBlock> uiBlocks, int fromID, int[] toID)
-        {
-            foreach (var mainBlock in uiBlocks)
-            {
-                if (mainBlock.GetId() == fromID)
-                {
-                    List<AbstractBlock> buffer = new List<AbstractBlock>(mainBlock.Next);
-
-                    foreach (var slaveBlockID in toID)
-                    {
-                        buffer.RemoveAll(block => block.GetId() == slaveBlockID);
-                    }
-                    mainBlock.Next = buffer.ToArray();
-                }
-            }
-        }
-
         public List<AbstractBlock> GetLinkedBlocks(List<AbstractBlock> uiBlocks)
         {
             List<AbstractBlock> result = new List<AbstractBlock>();
@@ -94,11 +54,14 @@ namespace LabBackend.Utils
 
             return result;
         }
+        public Block GetBlockById(List<Block> uiBlocks, int findId)
+        {
+            return uiBlocks.Find(block => block.Id == findId);
+        }
         public List<Block> GetLinkedFrontendBlocks(List<Block> blocksRAWFrontend)
         {
-            List<Block> result = new List<Block>();
             Block startBlock = blocksRAWFrontend[0];
-            Block endBlock = blocksRAWFrontend[1];
+            List<Block> result = new List<Block>();
 
             if (startBlock.NextBlockId == null &&
                 startBlock.TrueBlockId == null &&
@@ -108,57 +71,18 @@ namespace LabBackend.Utils
                 return result;
             }
 
-            result.Add(startBlock);
-            result.Add(endBlock);
-
-            blocksRAWFrontend.Remove(startBlock);
-            blocksRAWFrontend.Remove(endBlock);
-
-            foreach (var currentBlock in blocksRAWFrontend)
-            {
-
-                if (currentBlock.NextBlockId != null ||
-                    currentBlock.TrueBlockId != null ||
-                    currentBlock.FalseBlockId != null ||
-                    blocksRAWFrontend.Any(block => block.Id == block.Id))
-                {
-                    result.Add(currentBlock);
-                }
-            }
-
-            return result;
-        }
-        public AbstractBlock GetBlockById(List<AbstractBlock> uiLinkedBlocks, int Id)
-        {
-            foreach (var block in uiLinkedBlocks)
-            {
-                if (block.GetId() == Id)
-                {
-                    return block;
-                }
-            }
-            return null;
-        }
-        public Dictionary<int, Dictionary<int, bool>> CreateAdjacencyMatrix(List<Block> linkedFrontendBlocks)
-        {
-            Dictionary<int, Dictionary<int, bool>> matrix = new Dictionary<int, Dictionary<int, bool>>();
-            Stack<int> buffer = new Stack<int>();
-            List<Block> massive = new List<Block>();
-
-            Block startBlock = linkedFrontendBlocks[0];
-
             int newId = 1;
 
             void Traverse(Block currentBlock)
             {
                 if (currentBlock.Type != "if")
                 {
-                    Block nextBlock = linkedFrontendBlocks
+                    Block nextBlock = blocksRAWFrontend
                         .Select(block => block)
                         .Where(block => block.Id == currentBlock.NextBlockId)
                         .FirstOrDefault();
                     currentBlock.Id = newId;
-                    massive.Add(currentBlock);
+                    result.Add(currentBlock);
 
                     if (currentBlock.Type == "end")
                     {
@@ -173,15 +97,16 @@ namespace LabBackend.Utils
 
                         Traverse(nextBlock);
                     }
+
                     return;
                 }
                 else
                 {
-                    Block trueBlock = linkedFrontendBlocks
+                    Block trueBlock = blocksRAWFrontend
                        .Select(block => block)
                        .Where(block => block.Id == currentBlock.TrueBlockId)
                        .FirstOrDefault();
-                    Block falseBlock = linkedFrontendBlocks
+                    Block falseBlock = blocksRAWFrontend
                        .Select(block => block)
                        .Where(block => block.Id == currentBlock.FalseBlockId)
                        .FirstOrDefault();
@@ -189,7 +114,7 @@ namespace LabBackend.Utils
                     currentBlock.Id = newId;
                     newId++;
 
-                    massive.Add(currentBlock);
+                    result.Add(currentBlock);
 
                     if (currentBlock.TrueBlockId != null)
                     {
@@ -204,12 +129,17 @@ namespace LabBackend.Utils
 
                     return;
                 }
-
             }
 
             Traverse(startBlock);
 
-            foreach (Block block in massive)
+            return result;
+        }
+        public Dictionary<int, Dictionary<int, bool>> CreateAdjacencyMatrix(List<Block> linkedFrontendBlocks)
+        {
+            Dictionary<int, Dictionary<int, bool>> matrix = new Dictionary<int, Dictionary<int, bool>>();
+
+            foreach (Block block in linkedFrontendBlocks)
             {
                 matrix[block.Id] = new Dictionary<int, bool>();
                 if (block.NextBlockId.HasValue)
@@ -225,12 +155,12 @@ namespace LabBackend.Utils
                     matrix[block.Id][block.FalseBlockId.Value] = true;
                 }
             }
+
             return matrix;
         }
         public void TranslateCode(string languageCode, List<Block> linkedFrontendBlocks, Dictionary<int, Dictionary<int, bool>> adjacencyMatrix)
         {
             int startId = adjacencyMatrix.Keys.First();
-            Dictionary<int, int> test = new Dictionary<int, int>();
             int deep = 0;
 
             void Traverse(int currentId)

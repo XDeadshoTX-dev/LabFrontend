@@ -10,11 +10,9 @@ namespace LabBackend.Utils.Interfaces
 {
     public interface IManager
     {
-        public void SetLink(List<AbstractBlock> uiBlocks, int fromID, int[] toID);
-        public void RemoveLink(List<AbstractBlock> uiBlocks, int fromID, int[] toID);
         public List<AbstractBlock> GetLinkedBlocks(List<AbstractBlock> uiBlocks);
         public List<Block> GetLinkedFrontendBlocks(List<Block> blocksRAWFrontend);
-        public AbstractBlock GetBlockById(List<AbstractBlock> uiLinkedBlocks, int Id);
+        public Block GetBlockById(List<Block> uiBlocks, int findId);
         public Dictionary<int, Dictionary<int, bool>> CreateAdjacencyMatrix(List<Block> linkedFrontendBlocks);
         public void TranslateCode(string languageCode, List<Block> linkedFrontendBlocks, Dictionary<int, Dictionary<int, bool>> adjacencyMatrix);
     }
