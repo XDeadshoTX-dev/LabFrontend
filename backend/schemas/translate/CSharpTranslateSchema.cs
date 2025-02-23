@@ -22,7 +22,7 @@ namespace WpfApp2.backend.schemas.translate
             string amountSpaces = this.block.GetIndent(this.deepSchema - 1);
             pattern = $@"({amountSpaces}\{{)(.*?)(\n{amountSpaces}\}})";
         }
-        public override string InsertCode(Match match, string code)
+        public override string InsertCode(Match match, string fileContent, string code)
         {
             string openingBrace = match.Groups[1].Value.Trim();  // {
             string content = match.Groups[2].Value.Trim();       // raw content

@@ -125,12 +125,13 @@ namespace LabBackend.Utils.Abstract
                         this);
 
                     string result = translateSchema.InsertCode( 
-                        match, 
+                        match,
+                        fileContent,
                         this.Code);
 
                     return result;
                 },
-                RegexOptions.Singleline | RegexOptions.IgnoreCase
+                RegexOptions.Multiline
             );
 
             return updatedContent;

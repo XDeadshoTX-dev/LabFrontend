@@ -53,7 +53,7 @@ namespace BlockLinkingApp
             LanguageComboBox.Items.Add("C#");
             LanguageComboBox.Items.Add("Java");
             LanguageComboBox.Items.Add("Python");
-            LanguageComboBox.SelectedIndex = 2;
+            LanguageComboBox.SelectedIndex = 3;
         }
 
         private void AddBlockButton_Click(object sender, RoutedEventArgs e)
