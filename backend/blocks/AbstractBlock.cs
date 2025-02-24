@@ -136,7 +136,7 @@ namespace LabBackend.Utils.Abstract
         public virtual void Execute()
         {
         }
-        public virtual string Execute(int deep, List<string> bufferVariables)
+        public virtual string Execute(int deep, Stack<string> bufferVariables)
         {
             return string.Empty;
         }

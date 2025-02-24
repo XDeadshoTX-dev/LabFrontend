@@ -15,7 +15,7 @@ namespace LabBackend.Blocks.Actions
             this.Name = "PrintBlock";
             this.PatternValidation = @"^[a-zA-Z_]\w*$";
         }
-        private bool IsValidAssignment(string data, ref string sanitizedData, List<string> bufferVariables)
+        private bool IsValidAssignment(string data, ref string sanitizedData, Stack<string> bufferVariables)
         {
             string sanitizeData(string data)
             {
@@ -26,17 +26,27 @@ namespace LabBackend.Blocks.Actions
 
             if (Regex.IsMatch(sanitizedData, this.PatternValidation))
             {
+                var match = Regex.Match(sanitizedData, this.PatternValidation);
+
+                string content = match.Groups[0].Value;
+
+                if (!bufferVariables.Contains(content))
+                {
+                    throw new Exception($"[Type: {this.Name}; Content: \"{content}\"] Variable \"{content}\" doesn't exists, set accessible variable");
+                }
+
+                sanitizedData = content;
                 return true;
             }
 
             return false;
         }
-        public override string Execute(int deep, List<string> bufferVariables)
+        public override string Execute(int deep, Stack<string> bufferVariables)
         {
             string sanitizedData = string.Empty;
             if (!IsValidAssignment(this.Content, ref sanitizedData, bufferVariables))
             {
-                throw new Exception($"[Type: {this.Name}; \"Content: {this.Content}\"] Wrong pattern");
+                throw new Exception($"[Type: {this.Name}; \"Content: {sanitizedData}\"] Wrong pattern");
             }
 
             switch (this.Language)

@@ -19,7 +19,7 @@ namespace LabBackend.Blocks.Actions
             this.Name = "ConstantAssignmentBlock";
             this.PatternValidation = @"^([a-zA-Z_]\w*)=(\d+)$";
         }
-        private bool IsValidAssignment(string data, ref string sanitizedData, List<string> bufferVariables)
+        private bool IsValidAssignment(string data, ref string sanitizedData, Stack<string> bufferVariables)
         {
             string sanitizeData(string data)
             {
@@ -32,34 +32,38 @@ namespace LabBackend.Blocks.Actions
             if (Regex.IsMatch(sanitizedData, this.PatternValidation))
             {
                 var match = Regex.Match(sanitizedData, this.PatternValidation);
-                
-                if (bufferVariables.Exists(item => item == match.Groups[1].Value))
+                string variableName = match.Groups[1].Value;
+                string value = match.Groups[2].Value;
+
+                if (bufferVariables.Contains(variableName))
                 {
-                    throw new Exception($"[Type: {this.Name}; \"Content: {match.Groups[1].Value} = {match.Groups[2].Value}\"] Variable \"{match.Groups[1].Value}\" exists, change variable name");
+                    throw new Exception($"[Type: {this.Name}; Content: \"{variableName} = {value}\"] Variable \"{variableName}\" exists, change variable name");
                 }
 
-                int number = int.Parse(match.Groups[2].Value);
+                int number = int.Parse(value);
 
                 if (number >= 0)
                 {
+                    sanitizedData = $"{variableName} = {number}";
                     return true;
                 }
 
-                throw new Exception($"[Type: {this.Name}; \"Content: {this.Content}\"] The number must be greater than and equal to 0");
+                throw new Exception($"[Type: {this.Name}; Content: \"{variableName} = {number}\"] The number must be greater than and equal to 0");
             }
 
             return false;
         }
 
-        public override string Execute(int deep, List<string> bufferVariables)
+        public override string Execute(int deep, Stack<string> bufferVariables)
         {
             string sanitizedData = string.Empty;
             if (!IsValidAssignment(this.Content, ref sanitizedData, bufferVariables))
             {
-                throw new Exception($"[Type: {this.Name}; \"Content: {this.Content}\"] Wrong pattern");
+                string[] messageContent = sanitizedData.Split('=');
+                throw new Exception($"[Type: {this.Name}; Content: \"{messageContent[0]} = {messageContent[1]}\"] Wrong pattern");
             }
 
-            string[] parts = this.Content.Split('=');
+            string[] parts = sanitizedData.Split('=');
             string variableName = parts[0].Trim();
             string value = parts[1].Trim();
 

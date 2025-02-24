@@ -1,4 +1,5 @@
 ﻿using LabBackend.Utils.Abstract;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +15,10 @@ namespace LabBackend.Blocks.Conditions
         public ConditionBlock(string languageCode, string data) : base(languageCode, data)
         {
             this.Name = "Condition";
+            this.PatternValidation = @"^([a-zA-Z_]\w*)(==|<)(\d+)$";
         }
 
-        private bool IsValidCondition(string data, ref string sanitizedData)
+        private bool IsValidCondition(string data, ref string sanitizedData, Stack<string> bufferVariables)
         {
             string sanitizeData(string data)
             {
@@ -25,30 +27,38 @@ namespace LabBackend.Blocks.Conditions
 
             sanitizedData = sanitizeData(data);
 
-            if (Regex.IsMatch(sanitizedData, @"^[a-zA-Z_]\w*(==|<)\d+$"))
+            if (Regex.IsMatch(sanitizedData, this.PatternValidation))
             {
-                var match = Regex.Match(sanitizedData, @"^([a-zA-Z_]\w*)(==|<)(\d+)$");
+                var match = Regex.Match(sanitizedData, this.PatternValidation);
 
-                string comparisonOperator = match.Groups[2].Value;
-
+                string variableName = match.Groups[1].Value;
+                string operatorText = match.Groups[2].Value;
                 int number = int.Parse(match.Groups[3].Value);
+
+                if (!bufferVariables.Contains(variableName))
+                {
+                    throw new Exception($"[Type: {this.Name}; Content: \"{variableName} {operatorText} {number}\"] Variable \"{variableName}\" doesn't exists, set accessible variable");
+                }
 
                 if (number > 0)
                 {
+                    sanitizedData = $"{variableName} {operatorText} {number}";
                     return true;
                 }
+
+                throw new Exception($"[Type: {this.Name}; Content: \"{variableName} {operatorText} {number}\"] The number must be greater than and equal to 0");
             }
 
             return false;
         }
 
-        public override string Execute(int deep, List<string> bufferVariables)
+        public override string Execute(int deep, Stack<string> bufferVariables)
         {
             string sanitizedData = string.Empty;
-            if (!IsValidCondition(this.Content, ref sanitizedData))
+            if (!IsValidCondition(this.Content, ref sanitizedData, bufferVariables))
             {
-                Console.WriteLine("Invalid condition format");
-                return "error";
+                string[] messageContent = sanitizedData.Split(new string[] { "<", "=="}, StringSplitOptions.None);
+                throw new Exception($"[Type: {this.Name}; Content: \"{messageContent[0]} (< | ==) {messageContent[1]}\"] Wrong pattern");
             }
 
             string[] delimiters = { "<", "==" };
@@ -92,7 +102,7 @@ namespace LabBackend.Blocks.Conditions
             string updatedContent = InsertCodeIntoMain(deep, fileContent);
             this.WriteAllText(updatedContent);
 
-            return variableName;
+            return $"{this.Name} success";
         }
     }
 }

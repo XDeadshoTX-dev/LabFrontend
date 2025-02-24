@@ -156,7 +156,7 @@ namespace LabBackend.Utils
         }
         public string TranslateCode(string languageCode, List<Block> linkedFrontendBlocks, Dictionary<int, Dictionary<int, bool>> adjacencyMatrix)
         {
-            List<string> bufferVariables = new List<string>();
+            Stack<string> bufferVariables = new Stack<string>();
             int startId = adjacencyMatrix.Keys.First();
             int deep = 0;
 
@@ -193,7 +193,7 @@ namespace LabBackend.Utils
                 }
                 string response = backendBlock.Execute(deep, bufferVariables);
 
-                bufferVariables.Add(response);
+                bufferVariables.Push(response);
 
                 if (frontendBlock.Type == "if")
                 {
@@ -205,6 +205,7 @@ namespace LabBackend.Utils
                     if (isFalsePart)
                     {
                         deep--;
+
                         Traverse(nextId);
                         isFalsePart = false;
                     }
@@ -218,6 +219,7 @@ namespace LabBackend.Utils
                 {
                     deep--;
                 }
+                bufferVariables.Pop();
             }
 
             Traverse(startId);

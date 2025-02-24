@@ -13,7 +13,7 @@ namespace LabBackend.Blocks.Actions
         {
             this.Name = "end";
         }
-        public override string Execute(int deep, List<string> bufferVariables)
+        public override string Execute(int deep, Stack<string> bufferVariables)
         {
             switch (this.Language)
             {
