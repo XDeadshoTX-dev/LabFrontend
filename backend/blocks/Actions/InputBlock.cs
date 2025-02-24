@@ -15,30 +15,38 @@ namespace LabBackend.Blocks.Actions
             this.Name = "InputBlock";
             this.PatternValidation = @"^[a-zA-Z_]\w*$";
         }
-        private bool IsValidAssignment(string data, ref string sanitizedData)
+        private bool IsValidAssignment(string data, ref string sanitizedData, Stack<string> bufferVariables)
         {
             string sanitizeData(string data)
             {
                 return data.Replace(" ", "");
             }
 
-            sanitizedData = sanitizeData(data);
+
+            string sanitized = sanitizeData(data);
+            sanitizedData = sanitized;
 
             if (Regex.IsMatch(sanitizedData, this.PatternValidation))
             {
+                var match = Regex.Match(sanitizedData, this.PatternValidation);
+
+                if (bufferVariables.Contains(match.Groups[0].Value))
+                {
+                    throw new Exception($"[Type: {this.Name}; Content: \"{sanitizedData}\"] Variable \"{match.Groups[1].Value}\" exists, change variable name");
+                }
+
                 return true;
             }
 
             return false;
         }
 
-        public override void Execute(int deep)
+        public override string Execute(int deep, Stack<string> bufferVariables)
         {
             string sanitizedData = string.Empty;
-            if (!IsValidAssignment(this.Content, ref sanitizedData))
+            if (!IsValidAssignment(this.Content, ref sanitizedData, bufferVariables))
             {
-                Console.WriteLine("Invalid variable name format");
-                return;
+                throw new Exception($"[Type: {this.Name}; Content: \"{sanitizedData}\"] Wrong pattern!");
             }
 
             switch (this.Language)
@@ -64,6 +72,8 @@ cin >> {sanitizedData};";
             string fileContent = this.ReadAllText();
             string updatedContent = InsertCodeIntoMain(deep, fileContent);
             this.WriteAllText(updatedContent);
+
+            return sanitizedData;
         }
     }
 }

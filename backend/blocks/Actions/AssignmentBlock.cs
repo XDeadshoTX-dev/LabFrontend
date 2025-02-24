@@ -15,7 +15,7 @@ namespace LabBackend.Blocks.Actions
             this.Name = "AssignmentBlock";
             this.PatternValidation = @"^([a-zA-Z_]\w*)=([a-zA-Z_]\w*)$";
         }
-        private bool IsValidAssignment(string data, ref string sanitizedData)
+        private bool IsValidAssignment(string data, ref string sanitizedData, Stack<string> bufferVariables)
         {
             string sanitizeData(string data)
             {
@@ -26,21 +26,34 @@ namespace LabBackend.Blocks.Actions
 
             if (Regex.IsMatch(sanitizedData, this.PatternValidation))
             {
+                var match = Regex.Match(sanitizedData, this.PatternValidation);
+
+                string leftPart = match.Groups[1].Value;
+                string rightPart = match.Groups[2].Value;
+
+                if (!bufferVariables.Contains(leftPart) ||
+                    !bufferVariables.Contains(rightPart)
+                    )
+                {
+                    throw new Exception($"[Type: {this.Name}; Content: \"{leftPart} = {rightPart}\"] Variable \"{leftPart}\" or \"{rightPart}\" doesn't exists, set accessible variable");
+                }
+
+                sanitizedData = $"{leftPart} = {rightPart}";
                 return true;
             }
 
             return false;
         }
-        public override void Execute(int deep)
+        public override string Execute(int deep, Stack<string> bufferVariables)
         {
             string sanitizedData = string.Empty;
-            if (!IsValidAssignment(this.Content, ref sanitizedData))
+            if (!IsValidAssignment(this.Content, ref sanitizedData, bufferVariables))
             {
-                Console.WriteLine("Invalid assignment format");
-                return;
+                string[] messageContent = sanitizedData.Split('=');
+                throw new Exception($"[Type: {this.Name}; \"Content: {messageContent[0]} = {messageContent[1]}\"] Wrong pattern");
             }
 
-            string[] variables = this.Content.Split('=');
+            string[] variables = sanitizedData.Split('=');
             if (variables.Length != 2)
             {
                 throw new ArgumentException("Data should be in format 'V1=V2'");
@@ -68,6 +81,8 @@ namespace LabBackend.Blocks.Actions
             string fileContent = this.ReadAllText();
             string updatedContent = InsertCodeIntoMain(deep, fileContent);
             this.WriteAllText(updatedContent);
+
+            return "assign success";
         }
     }
 }

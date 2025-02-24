@@ -58,7 +58,7 @@ namespace BlockLinkingApp
             LanguageComboBox.Items.Add("C#");
             LanguageComboBox.Items.Add("Java");
             LanguageComboBox.Items.Add("Python");
-            LanguageComboBox.SelectedIndex = 3;
+            LanguageComboBox.SelectedIndex = 0;
         }
 
         private void AddBlockButton_Click(object sender, RoutedEventArgs e)
@@ -346,7 +346,19 @@ namespace BlockLinkingApp
             List<Block> blocksRAWFrontend = uiManager.getBlocks();
             List<Block> linkedFrontendBlocks = blockManager.GetLinkedFrontendBlocks(blocksRAWFrontend);
             Dictionary<int, Dictionary<int, bool>> adjacencyMatrix = blockManager.CreateAdjacencyMatrix(linkedFrontendBlocks);
-            blockManager.TranslateCode(uiManager.getLanguageCode(), linkedFrontendBlocks, adjacencyMatrix);
+            try
+            {
+                blockManager.TranslateCode(
+                    uiManager.getLanguageCode(),
+                    linkedFrontendBlocks,
+                    adjacencyMatrix);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            MessageBox.Show($"[{uiManager.getLanguageCode()}] Code translated successfully", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
 
