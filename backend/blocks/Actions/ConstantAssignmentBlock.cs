@@ -1,5 +1,6 @@
 ﻿using LabBackend.Utils.Abstract;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -34,12 +35,17 @@ namespace LabBackend.Blocks.Actions
                 
                 if (bufferVariables.Exists(item => item == match.Groups[1].Value))
                 {
-                    return false;
+                    throw new Exception($"[Type: {this.Name}; \"Content: {match.Groups[1].Value} = {match.Groups[2].Value}\"] Variable \"{match.Groups[1].Value}\" exists, change variable name");
                 }
 
                 int number = int.Parse(match.Groups[2].Value);
 
-                return number >= 0;
+                if (number >= 0)
+                {
+                    return true;
+                }
+
+                throw new Exception($"[Type: {this.Name}; \"Content: {this.Content}\"] The number must be greater than and equal to 0");
             }
 
             return false;
@@ -50,7 +56,7 @@ namespace LabBackend.Blocks.Actions
             string sanitizedData = string.Empty;
             if (!IsValidAssignment(this.Content, ref sanitizedData, bufferVariables))
             {
-                return "error";
+                throw new Exception($"[Type: {this.Name}; \"Content: {this.Content}\"] Wrong pattern");
             }
 
             string[] parts = this.Content.Split('=');

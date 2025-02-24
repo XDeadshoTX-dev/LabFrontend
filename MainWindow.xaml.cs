@@ -308,11 +308,19 @@ namespace BlockLinkingApp
             List<Block> blocksRAWFrontend = uiManager.getBlocks();
             List<Block> linkedFrontendBlocks = blockManager.GetLinkedFrontendBlocks(blocksRAWFrontend);
             Dictionary<int, Dictionary<int, bool>> adjacencyMatrix = blockManager.CreateAdjacencyMatrix(linkedFrontendBlocks);
-            
-            string response = blockManager.TranslateCode(
-                uiManager.getLanguageCode(), 
-                linkedFrontendBlocks, 
-                adjacencyMatrix);
+            try
+            {
+                blockManager.TranslateCode(
+                    uiManager.getLanguageCode(),
+                    linkedFrontendBlocks,
+                    adjacencyMatrix);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            MessageBox.Show($"[{uiManager.getLanguageCode()}] Code translated successfully", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private Brush GetBlockBackground(string type)

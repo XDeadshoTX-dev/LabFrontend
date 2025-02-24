@@ -36,7 +36,7 @@ namespace LabBackend.Blocks.Actions
             string sanitizedData = string.Empty;
             if (!IsValidAssignment(this.Content, ref sanitizedData, bufferVariables))
             {
-                return "error";
+                throw new Exception($"[Type: {this.Name}; \"Content: {this.Content}\"] Wrong pattern");
             }
 
             switch (this.Language)
@@ -62,7 +62,7 @@ namespace LabBackend.Blocks.Actions
             string updatedContent = InsertCodeIntoMain(deep, fileContent);
             this.WriteAllText(updatedContent);
 
-            return sanitizedData;
+            return $"{this.Name} success";
         }
     }
 }

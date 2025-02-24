@@ -41,7 +41,7 @@ namespace LabBackend.Blocks.Actions
             string updatedContent = InsertCodeIntoMain(deep, fileContent);
             this.WriteAllText(updatedContent);
 
-            return this.Name;
+            return $"{this.Name} success";
         }
     }
 }

@@ -68,7 +68,7 @@ namespace ConsoleApp1
 
             File.WriteAllText(this.FileName, Code);
 
-            return this.Name;
+            return $"{this.Name} success";
         }
     }
 }

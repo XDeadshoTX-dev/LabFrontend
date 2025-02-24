@@ -36,8 +36,7 @@ namespace LabBackend.Blocks.Actions
             string sanitizedData = string.Empty;
             if (!IsValidAssignment(this.Content, ref sanitizedData, bufferVariables))
             {
-                Console.WriteLine("Invalid assignment format");
-                return "error";
+                throw new Exception($"[Type: {this.Name}; \"Content: {this.Content}\"] Wrong pattern");
             }
 
             string[] variables = this.Content.Split('=');
@@ -69,7 +68,7 @@ namespace LabBackend.Blocks.Actions
             string updatedContent = InsertCodeIntoMain(deep, fileContent);
             this.WriteAllText(updatedContent);
 
-            return "success";
+            return "assign success";
         }
     }
 }

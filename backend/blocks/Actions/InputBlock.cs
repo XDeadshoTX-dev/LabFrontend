@@ -26,13 +26,15 @@ namespace LabBackend.Blocks.Actions
             string sanitized = sanitizeData(data);
             sanitizedData = sanitized;
 
-            if (bufferVariables.Exists(item => item == sanitized))
-            {
-                return false;
-            }
-
             if (Regex.IsMatch(sanitizedData, this.PatternValidation))
             {
+                var match = Regex.Match(sanitizedData, this.PatternValidation);
+
+                if (bufferVariables.Exists(item => item == match.Groups[0].Value))
+                {
+                    throw new Exception($"[Type: {this.Name}; \"Content: {this.Content}\"] Variable \"{match.Groups[1].Value}\" exists, change variable name");
+                }
+
                 return true;
             }
 
@@ -44,7 +46,7 @@ namespace LabBackend.Blocks.Actions
             string sanitizedData = string.Empty;
             if (!IsValidAssignment(this.Content, ref sanitizedData, bufferVariables))
             {
-                return "error";
+                throw new Exception($"[Type: {this.Name}; \"Content: {this.Content}\"] Wrong pattern!");
             }
 
             switch (this.Language)
