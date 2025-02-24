@@ -55,17 +55,30 @@ namespace WpfApp2.frontend.utils
 
             if (fromElement != null && toElement != null)
             {
-                var line = new Line
-                {
-                    Stroke = arrowColor,
-                    StrokeThickness = 2,
-                    X1 = Canvas.GetLeft(fromElement) + fromElement.ActualWidth / 2,
-                    Y1 = Canvas.GetTop(fromElement) + fromElement.ActualHeight / 2,
-                    X2 = Canvas.GetLeft(toElement) + toElement.ActualWidth / 2,
-                    Y2 = Canvas.GetTop(toElement) + toElement.ActualHeight / 2
-                };
+                var existingArrow = WorkspaceCanvas.Children.OfType<Line>().FirstOrDefault(line => line.Tag is Tuple<Block, Block> tuple &&
+                            tuple.Item1 == fromBlock && tuple.Item2 == toBlock);
 
-                WorkspaceCanvas.Children.Add(line);
+                if (existingArrow != null)
+                {
+                    existingArrow.X1 = Canvas.GetLeft(fromElement) + fromElement.ActualWidth / 2;
+                    existingArrow.Y1 = Canvas.GetTop(fromElement) + fromElement.ActualHeight / 2;
+                    existingArrow.X2 = Canvas.GetLeft(toElement) + toElement.ActualWidth / 2;
+                    existingArrow.Y2 = Canvas.GetTop(toElement) + toElement.ActualHeight / 2;
+                }
+                else
+                {
+                    var line = new Line
+                    {
+                        Stroke = arrowColor,
+                        StrokeThickness = 2,
+                        X1 = Canvas.GetLeft(fromElement) + fromElement.ActualWidth / 2,
+                        Y1 = Canvas.GetTop(fromElement) + fromElement.ActualHeight / 2,
+                        X2 = Canvas.GetLeft(toElement) + toElement.ActualWidth / 2,
+                        Y2 = Canvas.GetTop(toElement) + toElement.ActualHeight / 2,
+                        Tag = new Tuple<Block, Block>(fromBlock, toBlock)
+                    };
+                    WorkspaceCanvas.Children.Add(line);
+                }
             }
         }
         public List<Block> getBlocks()
