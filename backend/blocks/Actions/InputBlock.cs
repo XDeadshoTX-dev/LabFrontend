@@ -32,7 +32,7 @@ namespace LabBackend.Blocks.Actions
 
                 if (bufferVariables.Contains(match.Groups[0].Value))
                 {
-                    throw new Exception($"[Type: {this.Name}; Content: \"{sanitizedData}\"] Variable \"{match.Groups[1].Value}\" exists, change variable name");
+                    throw new Exception($"[Type: {this.Name}; Content: \"{sanitizedData}\"] Variable \"{sanitizedData}\" exists, change variable name");
                 }
 
                 return true;
