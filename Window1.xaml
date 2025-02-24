@@ -1,0 +1,9 @@
+﻿<Window x:Class="BlockLinkingApp.InputTextWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="edit text in block pls" Height="150" Width="300">
+    <StackPanel Margin="10,10,10,10">
+        <TextBox Name="TextInputBox" Height="40" Margin="5"/>
+        <Button Content="OK" Click="OkBtnClk" Margin="3" Height="20"/>
+    </StackPanel>
+</Window>

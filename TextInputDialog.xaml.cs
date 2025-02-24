@@ -20,9 +20,6 @@ namespace BlockLinkingApp
 
         private void FalseButton_Click(object sender, RoutedEventArgs e)
         {
-
-
-
             IsTrueSelected = false;
             this.DialogResult = true;
             this.Close();
