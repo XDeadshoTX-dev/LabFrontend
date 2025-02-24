@@ -46,7 +46,7 @@ namespace LabBackend.Blocks.Actions
             string sanitizedData = string.Empty;
             if (!IsValidAssignment(this.Content, ref sanitizedData, bufferVariables))
             {
-                throw new Exception($"[Type: {this.Name}; \"Content: {sanitizedData}\"] Wrong pattern");
+                throw new Exception($"[Type: {this.Name}; Content: \"{sanitizedData}\"] Wrong pattern");
             }
 
             switch (this.Language)

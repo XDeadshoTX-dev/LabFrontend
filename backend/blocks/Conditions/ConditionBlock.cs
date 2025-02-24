@@ -57,8 +57,7 @@ namespace LabBackend.Blocks.Conditions
             string sanitizedData = string.Empty;
             if (!IsValidCondition(this.Content, ref sanitizedData, bufferVariables))
             {
-                string[] messageContent = sanitizedData.Split(new string[] { "<", "=="}, StringSplitOptions.None);
-                throw new Exception($"[Type: {this.Name}; Content: \"{messageContent[0]} (< | ==) {messageContent[1]}\"] Wrong pattern");
+                throw new Exception($"[Type: {this.Name}; Content: \"{sanitizedData}\"] Wrong pattern");
             }
 
             string[] delimiters = { "<", "==" };
