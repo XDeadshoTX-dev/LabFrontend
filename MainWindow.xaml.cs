@@ -163,17 +163,12 @@ namespace BlockLinkingApp
 
             if (result == true)
             {
-               
-                if (connectionChoiceWindow.IsTrueSelected)
+
+                if (result == true)
                 {
                     uiManager.sourceBlock = block;
-                    MessageBox.Show($"true link {block.Text}");
-                }
-               
-                else
-                {
-                    uiManager.sourceBlock = block;
-                    MessageBox.Show($"flase link {block.Text}");
+                    uiManager.IsTSelect = connectionChoiceWindow.IsTrueSelected;
+                    MessageBox.Show($"{(uiManager.IsTSelect.Value ? "true" : "false")}  {block.Text}");
                 }
             }
         }
@@ -181,6 +176,9 @@ namespace BlockLinkingApp
         
         private void HandleOtherBlockRightClick(Block block)
         {
+
+
+
             uiManager.sourceBlock = block;
             MessageBox.Show($"block chosen: {block.Text}");
         }
@@ -195,23 +193,20 @@ namespace BlockLinkingApp
 
 
 
-                     if (uiManager.sourceBlock.FalseBlockId == null )
-                    {
-                        uiManager.sourceBlock.FalseBlockId = block.Id;
-                        uiManager.DrawArrow(uiManager.sourceBlock, block, Brushes.Red);
-                        MessageBox.Show($"connection False: {uiManager.sourceBlock.Text} -> {block.Text}");
-                    }
-
-
-                    else if (uiManager.sourceBlock.TrueBlockId == null)
+                     if (uiManager.sourceBlock.TrueBlockId == null && uiManager.IsTSelect.Value )
                     {
                         uiManager.sourceBlock.TrueBlockId = block.Id;
-                        uiManager.DrawArrow(uiManager.sourceBlock, block, Brushes.Green); 
-                        MessageBox.Show($"connection True: {uiManager.sourceBlock.Text} -> {block.Text}");
+                        uiManager.DrawArrow(uiManager.sourceBlock, block, Brushes.Green);
+                        MessageBox.Show($"connection true: {uiManager.sourceBlock.Text} -> {block.Text}");
                     }
 
 
-
+                    else if (uiManager.sourceBlock.FalseBlockId == null && !uiManager.IsTSelect.Value)
+                    {
+                        uiManager.sourceBlock.FalseBlockId = block.Id;
+                        uiManager.DrawArrow(uiManager.sourceBlock, block, Brushes.Red); 
+                        MessageBox.Show($"connection false: {uiManager.sourceBlock.Text} -> {block.Text}");
+                    }
 
 
 
