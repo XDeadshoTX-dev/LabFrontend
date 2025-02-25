@@ -84,7 +84,22 @@ namespace WpfApp2.frontend.utils
         }
         public List<Block> getBlocks()
         {
-            return blocks.Select(block =>
+            var copiedBlocks = blocks.Select(b => b).ToList();
+
+            return copiedBlocks.Select(block =>
+            {
+                var element = FindVisualChild<Border>(WorkspaceCanvas, block);
+                
+                block.Position = new Point(Canvas.GetLeft(element), Canvas.GetTop(element));
+                
+                return block;
+            }).ToList();
+        }
+        public List<Block> getCloneBlocks()
+        {
+            var copiedBlocks = blocks.Select(b => b).ToList();
+
+            var buffer = copiedBlocks.Select(block =>
             {
                 var element = FindVisualChild<Border>(WorkspaceCanvas, block);
 
@@ -92,6 +107,8 @@ namespace WpfApp2.frontend.utils
 
                 return block;
             }).ToList();
+
+            return buffer.Select(block => (Block)block.Clone()).ToList();
         }
 
         public string getLanguageCode()

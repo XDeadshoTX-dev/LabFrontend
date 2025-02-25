@@ -157,7 +157,7 @@ namespace BlockLinkingApp
 
         private void HandleIfBlockRightClick(Block block)
         {
-          
+
             var connectionChoiceWindow = new ConnectionChoiceWindow();
             bool? result = connectionChoiceWindow.ShowDialog();
 
@@ -173,12 +173,9 @@ namespace BlockLinkingApp
             }
         }
 
-        
+
         private void HandleOtherBlockRightClick(Block block)
         {
-
-
-
             uiManager.sourceBlock = block;
             MessageBox.Show($"block chosen: {block.Text}");
         }
@@ -193,7 +190,7 @@ namespace BlockLinkingApp
 
 
 
-                     if (uiManager.sourceBlock.TrueBlockId == null && uiManager.IsTSelect.Value )
+                    if (uiManager.sourceBlock.TrueBlockId == null && uiManager.IsTSelect.Value)
                     {
                         uiManager.sourceBlock.TrueBlockId = block.Id;
                         uiManager.DrawArrow(uiManager.sourceBlock, block, Brushes.Green);
@@ -204,9 +201,12 @@ namespace BlockLinkingApp
                     else if (uiManager.sourceBlock.FalseBlockId == null && !uiManager.IsTSelect.Value)
                     {
                         uiManager.sourceBlock.FalseBlockId = block.Id;
-                        uiManager.DrawArrow(uiManager.sourceBlock, block, Brushes.Red); 
+                        uiManager.DrawArrow(uiManager.sourceBlock, block, Brushes.Red);
                         MessageBox.Show($"connection false: {uiManager.sourceBlock.Text} -> {block.Text}");
                     }
+
+
+
 
 
 
@@ -338,7 +338,7 @@ namespace BlockLinkingApp
         {
             IManager blockManager = new BlockManager();
 
-            List<Block> blocksRAWFrontend = uiManager.getBlocks();
+            List<Block> blocksRAWFrontend = uiManager.getCloneBlocks();
             List<Block> linkedFrontendBlocks = blockManager.GetLinkedFrontendBlocks(blocksRAWFrontend);
             Dictionary<int, Dictionary<int, bool>> adjacencyMatrix = blockManager.CreateAdjacencyMatrix(linkedFrontendBlocks);
             try

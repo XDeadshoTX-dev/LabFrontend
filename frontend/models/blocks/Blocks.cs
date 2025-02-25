@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace WpfApp2.frontend.blocks
 {
-    public class Block
+    public class Block : ICloneable
     {
         public int Id { get; set; }
         public string Type { get; set; }
@@ -16,5 +16,19 @@ namespace WpfApp2.frontend.blocks
         public int? TrueBlockId { get; set; }
         public int? FalseBlockId { get; set; }
         public Point Position { get; set; }
+
+        public object Clone()
+        {
+            return new Block
+            {
+                Id = this.Id,
+                Type = this.Type,
+                Text = this.Text,
+                NextBlockId = this.NextBlockId,
+                TrueBlockId = this.TrueBlockId,
+                FalseBlockId = this.FalseBlockId,
+                Position = this.Position,
+            };
+        }
     }
 }
