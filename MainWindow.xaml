@@ -21,6 +21,7 @@
             <Button Content="Print Block" Tag="PrintBlock" Click="AddBlockButton_Click" Margin="5"/>
             <Button Content="Condition Block (don't use)" Tag="ConditionBlock" Click="AddBlockButton_Click" Margin="5"/>
             <Button Content="If Block" Tag="if" Click="AddBlockButton_Click" Margin="5"/>
+            <Button Content="Else Block" Tag="else" Click="AddBlockButton_Click" Margin="5"/>
             <Button Content="Save All" Click="SaveAllButton_Click" Margin="5"/>
             <Button Content="Load All" Click="LoadAllButton_Click" Margin="5"/>
             <Button Content="Translate into code" Click="TranslateButton_Click" Margin="5"/>

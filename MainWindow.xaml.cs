@@ -22,6 +22,7 @@ namespace BlockLinkingApp
     public partial class MainWindow : Window
     {
         UIManager uiManager;
+        private static int _nextBlockId = 1;
         public MainWindow()
         {
             InitializeComponent();
@@ -37,8 +38,8 @@ namespace BlockLinkingApp
         private void InitWorkspace()
         {
 
-            var startBlock = new Block { Id = 1, Type = "start", Text = "Start", NextBlockId = null, Position = new Point(50, 100) };
-            var endBlock = new Block { Id = 2, Type = "end", Text = "End", NextBlockId = null, Position = new Point(50, 500) };
+            var startBlock = new Block { Id = _nextBlockId++, Type = "start", Text = "Start", NextBlockId = null, Position = new Point(50, 100) };
+            var endBlock = new Block { Id = _nextBlockId++, Type = "end", Text = "End", NextBlockId = null, Position = new Point(50, 500) };
 
             uiManager.blocks.Add(startBlock);
             uiManager.blocks.Add(endBlock);
@@ -69,7 +70,7 @@ namespace BlockLinkingApp
 
             var newBlock = new Block
             {
-                Id = uiManager.blocks.Count + 1,
+                Id = _nextBlockId++,
                 Type = blockType,
                 Text = $"{blockType} Block {uiManager.blocks.Count + 1}",
                 NextBlockId = null,
@@ -83,6 +84,11 @@ namespace BlockLinkingApp
                 newBlock.FalseBlockId = null;
             }
 
+
+            else if (blockType == "else")
+            {
+                newBlock.Text = "else";
+            }
             uiManager.blocks.Add(newBlock);
             AddBlockToCanvas(newBlock);
             UpdateBlockCounter();
@@ -176,50 +182,80 @@ namespace BlockLinkingApp
 
         private void HandleOtherBlockRightClick(Block block)
         {
-            uiManager.sourceBlock = block;
-            MessageBox.Show($"block chosen: {block.Text}");
+            if (block.Type != "if")
+            {
+                var connectionChoiceWindow = new BlockConnectionChoiceWindow();
+                bool? result = connectionChoiceWindow.ShowDialog();
+
+                if (result == true)
+                {
+                    uiManager.sourceBlock = block;
+                    uiManager.IsNextSelect = connectionChoiceWindow.IsNextSelected;
+                }
+            }
+            else
+            {
+                uiManager.sourceBlock = block;
+            }
         }
 
-      
+
         private void HandleLeftClickOnBlock(Block block)
         {
             if (uiManager.sourceBlock != null && uiManager.sourceBlock != block)
             {
                 if (uiManager.sourceBlock.Type == "if")
                 {
-
-
-
-                    if (uiManager.sourceBlock.TrueBlockId == null && uiManager.IsTSelect.Value)
+                    if (uiManager.IsTSelect.HasValue)
                     {
-                        uiManager.sourceBlock.TrueBlockId = block.Id;
-                        uiManager.DrawArrow(uiManager.sourceBlock, block, Brushes.Green);
-                        MessageBox.Show($"connection true: {uiManager.sourceBlock.Text} -> {block.Text}");
+                        if (uiManager.IsTSelect.Value && uiManager.sourceBlock.TrueBlockId == null)
+                        {
+                            uiManager.sourceBlock.TrueBlockId = block.Id;
+                            uiManager.DrawArrow(uiManager.sourceBlock, block, Brushes.Green);
+                            MessageBox.Show($"connection true: {uiManager.sourceBlock.Text} -> {block.Text}");
+                        }
+                        else if (!uiManager.IsTSelect.Value && uiManager.sourceBlock.FalseBlockId == null)
+                        {
+                            uiManager.sourceBlock.FalseBlockId = block.Id;
+                            uiManager.DrawArrow(uiManager.sourceBlock, block, Brushes.Red);
+                            MessageBox.Show($"connection false: {uiManager.sourceBlock.Text} -> {block.Text}");
+                        }
+                        uiManager.IsTSelect = null;
                     }
-
-
-                    else if (uiManager.sourceBlock.FalseBlockId == null && !uiManager.IsTSelect.Value)
-                    {
-                        uiManager.sourceBlock.FalseBlockId = block.Id;
-                        uiManager.DrawArrow(uiManager.sourceBlock, block, Brushes.Red);
-                        MessageBox.Show($"connection false: {uiManager.sourceBlock.Text} -> {block.Text}");
-                    }
-
-
-
-
-
-
                 }
-                else
+                else if (uiManager.sourceBlock.Type == "else")
                 {
-                    uiManager.sourceBlock.NextBlockId = block.Id;
-                    uiManager.DrawArrow(uiManager.sourceBlock, block, Brushes.Black);
+                    if (uiManager.sourceBlock.NextBlockId == null)
+                    {
+                        uiManager.sourceBlock.NextBlockId = block.Id;
+                        uiManager.DrawArrow(uiManager.sourceBlock, block, Brushes.Orange); //f else 
+                        MessageBox.Show($"connection next: {uiManager.sourceBlock.Text} -> {block.Text}");
+                    }
+                }
+                else //def blcks
+                {
+                    if (uiManager.IsNextSelect.HasValue)
+                    {
+                        if (uiManager.IsNextSelect.Value && uiManager.sourceBlock.NextBlockId == null)
+                        {
+                            uiManager.sourceBlock.NextBlockId = block.Id;
+                            uiManager.DrawArrow(uiManager.sourceBlock, block, Brushes.Black);
+                            MessageBox.Show($"connection next: {uiManager.sourceBlock.Text} -> {block.Text}");
+                        }
+                        else if (!uiManager.IsNextSelect.Value && uiManager.sourceBlock.ExitElseBlockId == null)
+                        {
+                            uiManager.sourceBlock.ExitElseBlockId = block.Id;
+                            uiManager.DrawArrow(uiManager.sourceBlock, block, Brushes.Purple); 
+                            MessageBox.Show($"connection exit_else: {uiManager.sourceBlock.Text} -> {block.Text}");
+                        }
+                        uiManager.IsNextSelect = null;
+                    }
                 }
 
                 uiManager.sourceBlock = null;
             }
         }
+
 
         private void WorkspaceCanvas_Drop(object sender, DragEventArgs e)
         {
@@ -281,11 +317,17 @@ namespace BlockLinkingApp
                         NextBlockId = savedBlock.NextBlockId,
                         TrueBlockId = savedBlock.TrueBlockId,
                         FalseBlockId = savedBlock.FalseBlockId,
+                        ExitElseBlockId = savedBlock.ExitElseBlockId, 
                         Position = new Point((double)savedBlock.Position.X, (double)savedBlock.Position.Y)
                     };
 
                     uiManager.blocks.Add(block);
                     AddBlockToCanvas(block);
+
+                    if (block.Id >= _nextBlockId)
+                    {
+                        _nextBlockId = block.Id + 1;
+                    }
                 }
 
                 foreach (var block in uiManager.blocks)
@@ -295,7 +337,8 @@ namespace BlockLinkingApp
                         var toBlock = uiManager.blocks.Find(b => b.Id == block.NextBlockId.Value);
                         if (toBlock != null)
                         {
-                            uiManager.DrawArrow(block, toBlock, Brushes.Black); 
+  
+                            uiManager.DrawArrow(block, toBlock, block.Type == "else" ? Brushes.Orange : Brushes.Black);
                         }
                     }
 
@@ -304,7 +347,7 @@ namespace BlockLinkingApp
                         var trueBlock = uiManager.blocks.Find(b => b.Id == block.TrueBlockId.Value);
                         if (trueBlock != null)
                         {
-                            uiManager.DrawArrow(block, trueBlock, Brushes.Green); 
+                            uiManager.DrawArrow(block, trueBlock, Brushes.Green);
                         }
                     }
 
@@ -313,7 +356,16 @@ namespace BlockLinkingApp
                         var falseBlock = uiManager.blocks.Find(b => b.Id == block.FalseBlockId.Value);
                         if (falseBlock != null)
                         {
-                            uiManager.DrawArrow(block, falseBlock, Brushes.Red); 
+                            uiManager.DrawArrow(block, falseBlock, Brushes.Red);
+                        }
+                    }
+
+                    if (block.ExitElseBlockId.HasValue)
+                    {
+                        var exitElseBlock = uiManager.blocks.Find(b => b.Id == block.ExitElseBlockId.Value);
+                        if (exitElseBlock != null)
+                        {
+                            uiManager.DrawArrow(block, exitElseBlock, Brushes.Purple);
                         }
                     }
                 }
@@ -322,15 +374,10 @@ namespace BlockLinkingApp
                 MessageBox.Show("data success loaded");
                 if (uiManager.blocks.Count - 2 >= 101)
                 {
-
                     var llimit_message = new Llimit_message();
                     llimit_message.ShowDialog();
                     Application.Current.Shutdown();
-
                 }
-
-       
-
             }
         }
 
@@ -483,7 +530,7 @@ namespace BlockLinkingApp
             {
                 if (b.NextBlockId == block.Id)
                 {
-                    uiManager.DrawArrow(b, block, Brushes.Black);
+                    uiManager.DrawArrow(b, block, b.Type == "else" ? Brushes.Orange : Brushes.Black);
                 }
                 if (b.Type == "if")
                 {
@@ -496,10 +543,18 @@ namespace BlockLinkingApp
                         uiManager.DrawArrow(b, block, Brushes.Red);
                     }
                 }
-                if (b.Id == block.NextBlockId ||
-                    (block.Type == "if" && (block.TrueBlockId == b.Id || block.FalseBlockId == b.Id)))
+                if (b.ExitElseBlockId == block.Id)
                 {
-                    uiManager.DrawArrow(block, b, block.Type == "if" ? (b.Id == block.TrueBlockId ? Brushes.Green : Brushes.Red) : Brushes.Black);
+                    uiManager.DrawArrow(b, block, Brushes.Purple);
+                }
+                if (b.Id == block.NextBlockId ||
+                    (block.Type == "if" && (block.TrueBlockId == b.Id || block.FalseBlockId == b.Id)) ||
+                    block.ExitElseBlockId == b.Id)
+                {
+                    uiManager.DrawArrow(block, b,
+                        block.Type == "if" ? (b.Id == block.TrueBlockId ? Brushes.Green : Brushes.Red) :
+                        block.Type == "else" ? Brushes.Orange :
+                        block.ExitElseBlockId == b.Id ? Brushes.Purple : Brushes.Black);
                 }
             }
         }
@@ -552,6 +607,10 @@ namespace BlockLinkingApp
                     {
                         block.FalseBlockId = null;
                     }
+                }
+                if (block.ExitElseBlockId == blockToDelete.Id)
+                {
+                    block.ExitElseBlockId = null;
                 }
             }
             UpdateBlockCounter();
