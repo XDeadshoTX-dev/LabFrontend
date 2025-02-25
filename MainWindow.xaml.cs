@@ -338,7 +338,7 @@ namespace BlockLinkingApp
         {
             IManager blockManager = new BlockManager();
 
-            List<Block> blocksRAWFrontend = uiManager.getBlocks();
+            List<Block> blocksRAWFrontend = uiManager.getCloneBlocks();
             List<Block> linkedFrontendBlocks = blockManager.GetLinkedFrontendBlocks(blocksRAWFrontend);
             Dictionary<int, Dictionary<int, bool>> adjacencyMatrix = blockManager.CreateAdjacencyMatrix(linkedFrontendBlocks);
             try
