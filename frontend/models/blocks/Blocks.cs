@@ -15,6 +15,7 @@ namespace WpfApp2.frontend.blocks
         public int? NextBlockId { get; set; }
         public int? TrueBlockId { get; set; }
         public int? FalseBlockId { get; set; }
+        public int? ExitElseBlockId { get; set; }
         public Point Position { get; set; }
 
         public object Clone()

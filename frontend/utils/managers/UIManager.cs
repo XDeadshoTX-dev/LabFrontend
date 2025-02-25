@@ -19,11 +19,13 @@ namespace WpfApp2.frontend.utils
         public Canvas WorkspaceCanvas;
         Window window;
         public bool? IsTSelect { get; set; }
+        public bool? IsNextSelect { get; set; }
         public UIManager(Canvas workspace)
         {
             this.WorkspaceCanvas = workspace;
             this.window = Application.Current.MainWindow;
             this.IsTSelect = null;
+            this.IsNextSelect = null;
         }
 
         private T FindVisualChild<T>(DependencyObject parent, Block block) where T : DependencyObject
