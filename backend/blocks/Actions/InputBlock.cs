@@ -67,7 +67,7 @@ std::cin >> {sanitizedData};";
                     this.Code = $"{sanitizedData} = int(input())";
                     break;
                 case "java":
-                    this.Code = $"{sanitizedData} = Integer.parseInt(scan.nextLine());";
+                    this.Code = $"int {sanitizedData} = Integer.parseInt(scan.nextLine());";
                     break;
             }
 
