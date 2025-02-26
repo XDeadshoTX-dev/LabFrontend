@@ -27,29 +27,37 @@ namespace BlockLinkingApp
         {
             InitializeComponent();
             uiManager = new UIManager(WorkspaceCanvas);
-            
+
             InitWorkspace();
             InitComboBox();
             this.KeyDown += MainWindow_DelDown;
-            this.KeyDown += MainWindow_InsDown; 
+            this.KeyDown += MainWindow_InsDown;
             UpdateBlockCounter();
         }
 
         private void InitWorkspace()
         {
-
-            var startBlock = new Block { Id = _nextBlockId++, Type = "start", Text = "Start", NextBlockId = null, Position = new Point(50, 100) };
-            var endBlock = new Block { Id = _nextBlockId++, Type = "end", Text = "End", NextBlockId = null, Position = new Point(50, 500) };
+            var startBlock = new Block
+            {
+                Id = _nextBlockId++,
+                Type = "start",
+                Text = "Start",
+                NextBlockId = null,
+                Position = new Point(50, 100)
+            };
+            var endBlock = new Block
+            {
+                Id = _nextBlockId++,
+                Type = "end",
+                Text = "End",
+                NextBlockId = null,
+                Position = new Point(50, 500)
+            };
 
             uiManager.blocks.Add(startBlock);
             uiManager.blocks.Add(endBlock);
-
-            StartBlock.Tag = startBlock;
-            EndBlock.Tag = endBlock;
-
             AddBlockToCanvas(startBlock);
             AddBlockToCanvas(endBlock);
-
         }
 
         private void InitComboBox()
@@ -72,7 +80,7 @@ namespace BlockLinkingApp
             {
                 Id = _nextBlockId++,
                 Type = blockType,
-                Text = $"{blockType} Block {uiManager.blocks.Count + 1}",
+                Text = blockType,
                 NextBlockId = null,
                 Position = new Point(10, 10)
             };
@@ -84,19 +92,14 @@ namespace BlockLinkingApp
                 newBlock.FalseBlockId = null;
             }
 
-
-            else if (blockType == "else")
-            {
-                newBlock.Text = "else";
-            }
             uiManager.blocks.Add(newBlock);
             AddBlockToCanvas(newBlock);
             UpdateBlockCounter();
-            if (uiManager.blocks.Count-2 == 101)
+            if (uiManager.blocks.Count - 2 == 101)
             {
                 var llimit_message = new Llimit_message();
                 llimit_message.ShowDialog();
-                Application.Current.Shutdown(); 
+                Application.Current.Shutdown();
             }
 
 
@@ -106,11 +109,27 @@ namespace BlockLinkingApp
         {
             var border = new Border
             {
-                Width = 100,
-                Height = 50,
+                Width = 150,
+                Height = 70,
                 Background = GetBlockBackground(block.Type),
+                BorderThickness = new Thickness(2),
+                BorderBrush = Brushes.Black,
                 Tag = block
             };
+
+            var grid = new Grid();
+            grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(15) });
+            grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+
+            var typeTextBlock = new TextBlock
+            {
+                Text = block.Type,
+                FontSize = 10,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Top,
+                Foreground = Brushes.Red
+            };
+            Grid.SetRow(typeTextBlock, 0);
 
             var textBlock = new TextBlock
             {
@@ -118,8 +137,11 @@ namespace BlockLinkingApp
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Center
             };
+            Grid.SetRow(textBlock, 1);
 
-            border.Child = textBlock;
+            grid.Children.Add(typeTextBlock);
+            grid.Children.Add(textBlock);
+            border.Child = grid;
 
             Canvas.SetLeft(border, block.Position.X);
             Canvas.SetTop(border, block.Position.Y);
@@ -128,7 +150,6 @@ namespace BlockLinkingApp
             border.MouseDown += Border_MouseDown;
             border.PreviewMouseLeftButtonDown += Border_Left_2_clck;
             uiManager.WorkspaceCanvas.Children.Add(border);
-           
         }
 
         private void Border_MouseMove(object sender, MouseEventArgs e)
@@ -147,7 +168,7 @@ namespace BlockLinkingApp
                 {
                     if (block.Type == "if")
                     {
-                        HandleIfBlockRightClick(block); 
+                        HandleIfBlockRightClick(block);
                     }
                     else
                     {
@@ -156,7 +177,7 @@ namespace BlockLinkingApp
                 }
                 else if (e.LeftButton == MouseButtonState.Pressed && uiManager.sourceBlock != null)
                 {
-                    HandleLeftClickOnBlock(block); 
+                    HandleLeftClickOnBlock(block);
                 }
             }
         }
@@ -180,20 +201,28 @@ namespace BlockLinkingApp
         }
 
 
+
         private void HandleOtherBlockRightClick(Block block)
+
         {
+
             if (block.Type != "if")
+
             {
                 var connectionChoiceWindow = new BlockConnectionChoiceWindow();
-                bool? result = connectionChoiceWindow.ShowDialog();
 
+                bool? result = connectionChoiceWindow.ShowDialog();
                 if (result == true)
+
                 {
+
                     uiManager.sourceBlock = block;
+
                     uiManager.IsNextSelect = connectionChoiceWindow.IsNextSelected;
                 }
             }
             else
+
             {
                 uiManager.sourceBlock = block;
             }
@@ -245,7 +274,7 @@ namespace BlockLinkingApp
                         else if (!uiManager.IsNextSelect.Value && uiManager.sourceBlock.ExitElseBlockId == null)
                         {
                             uiManager.sourceBlock.ExitElseBlockId = block.Id;
-                            uiManager.DrawArrow(uiManager.sourceBlock, block, Brushes.Purple); 
+                            uiManager.DrawArrow(uiManager.sourceBlock, block, Brushes.Purple);
                             MessageBox.Show($"connection exit_else: {uiManager.sourceBlock.Text} -> {block.Text}");
                         }
                         uiManager.IsNextSelect = null;
@@ -255,7 +284,6 @@ namespace BlockLinkingApp
                 uiManager.sourceBlock = null;
             }
         }
-
 
         private void WorkspaceCanvas_Drop(object sender, DragEventArgs e)
         {
@@ -268,7 +296,7 @@ namespace BlockLinkingApp
                 if (droppedBorder.Tag is Block block)
                 {
                     block.Position = new Point(Canvas.GetLeft(droppedBorder), Canvas.GetTop(droppedBorder));
-                    UpdateArrowsForBlock(block); 
+                    UpdateArrowsForBlock(block);
                 }
             }
         }
@@ -317,7 +345,7 @@ namespace BlockLinkingApp
                         NextBlockId = savedBlock.NextBlockId,
                         TrueBlockId = savedBlock.TrueBlockId,
                         FalseBlockId = savedBlock.FalseBlockId,
-                        ExitElseBlockId = savedBlock.ExitElseBlockId, 
+                        ExitElseBlockId = savedBlock.ExitElseBlockId,
                         Position = new Point((double)savedBlock.Position.X, (double)savedBlock.Position.Y)
                     };
 
@@ -337,7 +365,7 @@ namespace BlockLinkingApp
                         var toBlock = uiManager.blocks.Find(b => b.Id == block.NextBlockId.Value);
                         if (toBlock != null)
                         {
-  
+
                             uiManager.DrawArrow(block, toBlock, block.Type == "else" ? Brushes.Orange : Brushes.Black);
                         }
                     }
@@ -380,6 +408,7 @@ namespace BlockLinkingApp
                 }
             }
         }
+
 
         private void TranslateButton_Click(object sender, RoutedEventArgs e)
         {
@@ -426,9 +455,13 @@ namespace BlockLinkingApp
         }
         private void UpdateBlockText(Border border, string newText)
         {
-            if (border.Child is TextBlock textBlock)
+            if (border.Child is Grid grid)
             {
-                textBlock.Text = newText;
+                var textBlock = grid.Children.OfType<TextBlock>().FirstOrDefault(tb => Grid.GetRow(tb) == 1);
+                if (textBlock != null)
+                {
+                    textBlock.Text = newText;
+                }
             }
         }
         private void Border_Left_2_clck(object sender, MouseButtonEventArgs e)
@@ -497,10 +530,13 @@ namespace BlockLinkingApp
         private void Del_block_connection(Block block)
         {
             if (block == null) return;
+
+
             RemovearrForBlock(block);
             block.NextBlockId = null;
             block.TrueBlockId = null;
             block.FalseBlockId = null;
+            block.ExitElseBlockId = null;
         }
 
         private void MainWindow_InsDown(object sender, KeyEventArgs e)
@@ -509,17 +545,17 @@ namespace BlockLinkingApp
             {
                 var blockUnderCursor = GetBlockUnderCursor();
                 if (blockUnderCursor != null)
-               {
+                {
                     Del_block_connection(blockUnderCursor);
                 }
-           }
-       }
+            }
+        }
 
 
 
         private void UpdateBlockCounter()
         {
-            BlockCounter.Text = $"Blocks: {uiManager.blocks.Count-2}";
+            BlockCounter.Text = $"Blocks: {uiManager.blocks.Count - 2}";
         }
 
 
@@ -646,7 +682,7 @@ namespace BlockLinkingApp
                 "PrintBlock" => Brushes.LightPink,
                 "start" => Brushes.LightSkyBlue,
                 "end" => Brushes.LightGreen,
-                "if" => Brushes.LightCoral, 
+                "if" => Brushes.LightCoral,
                 _ => Brushes.LightGray
             };
         }
