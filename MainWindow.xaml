@@ -30,12 +30,6 @@
 
         <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <Canvas x:Name="WorkspaceCanvas" Background="White" AllowDrop="True" Drop="WorkspaceCanvas_Drop" Width="1500" Height="15000">
-                <Border Canvas.Left="50" Canvas.Top="50" Width="100" Height="50" Background="LightBlue" x:Name="StartBlock">
-                    <TextBlock Text="Start" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                </Border>
-                <Border Canvas.Left="50" Canvas.Top="500" Width="100" Height="50" Background="LightGreen" x:Name="EndBlock">
-                    <TextBlock Text="End" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                </Border>
             </Canvas>
         </ScrollViewer>
     </Grid>
