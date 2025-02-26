@@ -21,9 +21,11 @@ namespace LabBackend.Blocks.Actions
             {
                 case "c":
                     this.Code = @"#include <stdio.h>
+#include <stdlib.h>
 
 int main()
 {
+    char input[100];
 }
 ";
                     break;

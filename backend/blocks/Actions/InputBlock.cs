@@ -52,7 +52,9 @@ namespace LabBackend.Blocks.Actions
             switch (this.Language)
             {
                 case "c":
-                    this.Code = $"scanf(\"%d\", &{sanitizedData});";
+                    this.Code = @$"int {sanitizedData};
+fgets(input, sizeof(input), stdin);
+{sanitizedData} = atoi(input);";
                     break;
                 case "c++":
                     this.Code = @$"int {sanitizedData};

@@ -52,7 +52,7 @@ namespace LabBackend.Blocks.Actions
             switch (this.Language)
             {
                 case "c":
-                    this.Code = $"printf(\"%s\", {sanitizedData});";
+                    this.Code = $"printf(\"%d\\n\", {sanitizedData});";
                     break;
                 case "c++":
                     this.Code = $"std::cout << {sanitizedData} << std::endl;";

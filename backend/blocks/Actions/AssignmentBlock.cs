@@ -63,8 +63,6 @@ namespace LabBackend.Blocks.Actions
             switch (this.Language)
             {
                 case "c":
-                    this.Code = $"strcpy({v1}, {v2});";
-                    break;
                 case "c++":
                 case "c#":
                 case "java":
