@@ -61,7 +61,7 @@ fgets(input, sizeof(input), stdin);
 std::cin >> {sanitizedData};";
                     break;
                 case "c#":
-                    this.Code = $"{sanitizedData} = int.Parse(Console.ReadLine());";
+                    this.Code = $"int {sanitizedData} = int.Parse(Console.ReadLine());";
                     break;
                 case "python":
                     this.Code = $"{sanitizedData} = int(input())";
