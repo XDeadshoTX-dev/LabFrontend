@@ -67,6 +67,7 @@ namespace LabBackend.Utils
         {
             Block startBlock = blocksRAWFrontend[0];
             List<Block> result = new List<Block>();
+            Stack<Block> buffer = new Stack<Block>();
 
             if (startBlock.NextBlockId == null &&
                 startBlock.TrueBlockId == null &&
@@ -77,12 +78,29 @@ namespace LabBackend.Utils
             }
 
             int newId = 1;
+            bool existElse = false;
 
             void Traverse(Block currentBlock)
             {
                 if (currentBlock.Type != "if")
                 {
-                    Block nextBlock = GetBlockById(blocksRAWFrontend, currentBlock.NextBlockId);
+                    Block nextBlock;
+                    if (currentBlock.ExitElseBlockId != null && existElse == true)
+                    {
+                        nextBlock = GetBlockById(blocksRAWFrontend, currentBlock.ExitElseBlockId);
+                    }
+                    else
+                    {
+                        nextBlock = GetBlockById(blocksRAWFrontend, currentBlock.NextBlockId);
+                    }
+
+                        
+                    
+                    if (currentBlock.Type == "else")
+                    {
+                        existElse = true;
+                    }
+
                     currentBlock.Id = newId;
                     result.Add(currentBlock);
 
@@ -90,12 +108,28 @@ namespace LabBackend.Utils
                     {
                         return;
                     }
+                    if (currentBlock.ExitElseBlockId != null && existElse == false)
+                    {
+                        newId++;
+                        buffer.Push(currentBlock);
+                        return;
+                    }
 
                     newId++;
 
                     if (nextBlock != null)
                     {
-                        currentBlock.NextBlockId = newId;
+                        if (currentBlock.ExitElseBlockId != null && existElse == true)
+                        {
+                            existElse = false;
+                            currentBlock.ExitElseBlockId = newId;
+
+                            buffer.Pop().ExitElseBlockId = newId;
+                        }
+                        else
+                        {
+                            currentBlock.NextBlockId = newId;
+                        }
 
                         Traverse(nextBlock);
                     }
