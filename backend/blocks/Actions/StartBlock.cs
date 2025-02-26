@@ -31,7 +31,6 @@ int main()
                     break;
                 case "c++":
                     this.Code = @"#include <iostream>
-using namespace std;
 
 int main()
 {

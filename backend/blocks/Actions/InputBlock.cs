@@ -58,7 +58,7 @@ fgets(input, sizeof(input), stdin);
                     break;
                 case "c++":
                     this.Code = @$"int {sanitizedData};
-cin >> {sanitizedData};";
+std::cin >> {sanitizedData};";
                     break;
                 case "c#":
                     this.Code = $"{sanitizedData} = int.Parse(Console.ReadLine());";
