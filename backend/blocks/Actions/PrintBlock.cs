@@ -61,7 +61,7 @@ namespace LabBackend.Blocks.Actions
                     this.Code = $"Console.WriteLine({sanitizedData});";
                     break;
                 case "python":
-                    this.Code = $"print({sanitizedData});";
+                    this.Code = $"print({sanitizedData})";
                     break;
                 case "java":
                     this.Code = $"System.out.println({sanitizedData});";
