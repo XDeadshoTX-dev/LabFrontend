@@ -21,15 +21,16 @@ namespace LabBackend.Blocks.Actions
             {
                 case "c":
                     this.Code = @"#include <stdio.h>
+#include <stdlib.h>
 
 int main()
 {
+    char input[100];
 }
 ";
                     break;
                 case "c++":
                     this.Code = @"#include <iostream>
-using namespace std;
 
 int main()
 {
@@ -51,8 +52,11 @@ namespace ConsoleApp1
 ";
                     break;
                 case "java":
-                    this.Code = @"public class Main {
+                    this.Code = @"import java.util.*;
+
+public class Main {
     public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
     }
 }
 ";

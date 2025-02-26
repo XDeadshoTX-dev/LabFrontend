@@ -52,20 +52,22 @@ namespace LabBackend.Blocks.Actions
             switch (this.Language)
             {
                 case "c":
-                    this.Code = $"scanf(\"%d\", &{sanitizedData});";
+                    this.Code = @$"int {sanitizedData};
+fgets(input, sizeof(input), stdin);
+{sanitizedData} = atoi(input);";
                     break;
                 case "c++":
                     this.Code = @$"int {sanitizedData};
-cin >> {sanitizedData};";
+std::cin >> {sanitizedData};";
                     break;
                 case "c#":
-                    this.Code = $"{sanitizedData} = int.Parse(Console.ReadLine());";
+                    this.Code = $"int {sanitizedData} = int.Parse(Console.ReadLine());";
                     break;
                 case "python":
                     this.Code = $"{sanitizedData} = int(input())";
                     break;
                 case "java":
-                    this.Code = $"{sanitizedData} = Integer.parseInt(scan.nextLine());";
+                    this.Code = $"int {sanitizedData} = Integer.parseInt(scan.nextLine());";
                     break;
             }
 

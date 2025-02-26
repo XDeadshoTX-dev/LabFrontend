@@ -52,7 +52,7 @@ namespace LabBackend.Blocks.Actions
             switch (this.Language)
             {
                 case "c":
-                    this.Code = $"printf(\"%s\", {sanitizedData});";
+                    this.Code = $"printf(\"%d\\n\", {sanitizedData});";
                     break;
                 case "c++":
                     this.Code = $"std::cout << {sanitizedData} << std::endl;";
@@ -61,7 +61,7 @@ namespace LabBackend.Blocks.Actions
                     this.Code = $"Console.WriteLine({sanitizedData});";
                     break;
                 case "python":
-                    this.Code = $"print({sanitizedData});";
+                    this.Code = $"print({sanitizedData})";
                     break;
                 case "java":
                     this.Code = $"System.out.println({sanitizedData});";
