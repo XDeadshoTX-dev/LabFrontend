@@ -91,12 +91,12 @@ namespace LabBackend.Utils
                 {
                     Block nextBlock = null;
 
-                    if (inFalse == true && currentBlock.Type != "else")
+                    if (inFalse == true && currentBlock.Type != "else") // without else
                     {
                         inFalse = false;
                         buffer.Pop().ExitElseBlockId = newId;
                     }
-                    else
+                    else // with else
                     {
                         inFalse = false;
                     }
