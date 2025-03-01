@@ -148,10 +148,16 @@ namespace LabBackend.Utils
 
                     newId++;
 
-                    currentBlock.TrueBlockId = newId;
-                    Traverse(trueBlock);
-                    currentBlock.FalseBlockId = newId;
-                    Traverse(falseBlock);
+                    if (trueBlock != null)
+                    {
+                        currentBlock.TrueBlockId = newId;
+                        Traverse(trueBlock);
+                    }
+                    if (falseBlock != null)
+                    {
+                        currentBlock.FalseBlockId = newId;
+                        Traverse(falseBlock);
+                    }
 
                 }
             }
