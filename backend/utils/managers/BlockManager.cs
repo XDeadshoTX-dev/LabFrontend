@@ -66,6 +66,7 @@ namespace LabBackend.Utils
         public List<Block> GetLinkedFrontendBlocks(List<Block> blocksRAWFrontend)
         {
             Block startBlock = blocksRAWFrontend[0];
+
             List<Block> result = new List<Block>();
             Stack<Block> buffer = new Stack<Block>();
 
@@ -82,82 +83,63 @@ namespace LabBackend.Utils
 
             void Traverse(Block currentBlock)
             {
+                currentBlock.Id = newId;
+                result.Add(currentBlock);
+
                 if (currentBlock.Type != "if")
                 {
-                    Block nextBlock;
-                    if (currentBlock.ExitElseBlockId != null && existElse == true)
-                    {
-                        nextBlock = GetBlockById(blocksRAWFrontend, currentBlock.ExitElseBlockId);
-                    }
-                    else
+                    Block nextBlock = null;
+                    if (currentBlock.NextBlockId != null)
                     {
                         nextBlock = GetBlockById(blocksRAWFrontend, currentBlock.NextBlockId);
                     }
-
-                        
-                    
-                    if (currentBlock.Type == "else")
+                    else if (currentBlock.ExitElseBlockId != null && existElse == true)
                     {
-                        existElse = true;
+                        nextBlock = GetBlockById(blocksRAWFrontend, currentBlock.ExitElseBlockId);  
                     }
-
-                    currentBlock.Id = newId;
-                    result.Add(currentBlock);
-
-                    if (currentBlock.Type == "end")
-                    {
-                        return;
-                    }
-                    if (currentBlock.ExitElseBlockId != null && existElse == false)
+                    else if (currentBlock.ExitElseBlockId != null && existElse == false)
                     {
                         newId++;
                         buffer.Push(currentBlock);
                         return;
                     }
+                    else if (currentBlock.Type == "end")
+                    {
+                        return;
+                    }
 
                     newId++;
 
-                    if (nextBlock != null)
+                    if (currentBlock.ExitElseBlockId != null && existElse == true)
                     {
-                        if (currentBlock.ExitElseBlockId != null && existElse == true)
-                        {
-                            existElse = false;
-                            currentBlock.ExitElseBlockId = newId;
-
-                            buffer.Pop().ExitElseBlockId = newId;
-                        }
-                        else
-                        {
-                            currentBlock.NextBlockId = newId;
-                        }
-
-                        Traverse(nextBlock);
+                        existElse = false;
+                        currentBlock.ExitElseBlockId = newId;
+                        buffer.Pop().ExitElseBlockId = newId;
+                    }
+                    else
+                    {
+                        currentBlock.NextBlockId = newId;
                     }
 
-                    return;
+                    if (currentBlock.Type == "else")
+                    {
+                        existElse = true;
+                    }
+
+                    Traverse(nextBlock);
                 }
                 else
                 {
                     Block trueBlock = GetBlockById(blocksRAWFrontend, currentBlock.TrueBlockId);
                     Block falseBlock = GetBlockById(blocksRAWFrontend, currentBlock.FalseBlockId);
 
-                    currentBlock.Id = newId;
                     newId++;
 
-                    result.Add(currentBlock);
+                    currentBlock.TrueBlockId = newId;
+                    Traverse(trueBlock);
+                    currentBlock.FalseBlockId = newId;
+                    Traverse(falseBlock);
 
-                    if (currentBlock.TrueBlockId != null)
-                    {
-                        currentBlock.TrueBlockId = newId;
-                        Traverse(trueBlock);
-                    }
-                    if (currentBlock.FalseBlockId != null)
-                    {
-                        currentBlock.FalseBlockId = newId;
-                        Traverse(falseBlock);
-                    }
-
-                    return;
                 }
             }
 
