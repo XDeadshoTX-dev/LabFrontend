@@ -189,6 +189,10 @@ namespace LabBackend.Utils
                 {
                     matrix[block.Id][block.FalseBlockId.Value] = true;
                 }
+                if (block.ExitElseBlockId.HasValue)
+                {
+                    matrix[block.Id][block.ExitElseBlockId.Value] = true;
+                }
             }
 
             return matrix;
