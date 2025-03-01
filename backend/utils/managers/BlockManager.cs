@@ -91,10 +91,14 @@ namespace LabBackend.Utils
                 {
                     Block nextBlock = null;
 
-                    if (inFalse == true)
+                    if (inFalse == true && currentBlock.Type != "else")
                     {
                         inFalse = false;
                         buffer.Pop().ExitElseBlockId = newId;
+                    }
+                    else
+                    {
+                        inFalse = false;
                     }
                     if (currentBlock.NextBlockId != null)
                     {
@@ -102,7 +106,7 @@ namespace LabBackend.Utils
                     }
                     else if (currentBlock.ExitElseBlockId != null && existElse == true)
                     {
-                        nextBlock = GetBlockById(blocksRAWFrontend, currentBlock.ExitElseBlockId);  
+                        nextBlock = GetBlockById(blocksRAWFrontend, currentBlock.ExitElseBlockId);
                     }
                     else if (currentBlock.ExitElseBlockId != null && existElse == false)
                     {
