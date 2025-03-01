@@ -118,23 +118,28 @@ namespace LabBackend.Utils
 
                     newId++;
 
-                    if (currentBlock.ExitElseBlockId != null && existElse == true)
+                    if (nextBlock != null)
                     {
-                        existElse = false;
-                        currentBlock.ExitElseBlockId = newId;
-                        buffer.Pop().ExitElseBlockId = newId;
-                    }
-                    else
-                    {
-                        currentBlock.NextBlockId = newId;
+                        if (currentBlock.ExitElseBlockId != null && existElse == true)
+                        {
+                            existElse = false;
+                            currentBlock.ExitElseBlockId = newId;
+                            buffer.Pop().ExitElseBlockId = newId;
+                        }
+                        else
+                        {
+                            currentBlock.NextBlockId = newId;
+                        }
+
+                        if (currentBlock.Type == "else")
+                        {
+                            existElse = true;
+                        }
+
+                        Traverse(nextBlock);
                     }
 
-                    if (currentBlock.Type == "else")
-                    {
-                        existElse = true;
-                    }
-
-                    Traverse(nextBlock);
+                    return;
                 }
                 else
                 {
