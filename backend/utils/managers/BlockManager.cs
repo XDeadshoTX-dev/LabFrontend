@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WpfApp2.backend.blocks.Conditions;
 using WpfApp2.frontend.blocks;
 using WpfApp2.frontend.utils;
 
@@ -173,6 +174,7 @@ namespace LabBackend.Utils
         public Dictionary<int, Dictionary<int, bool>> CreateAdjacencyMatrix(List<Block> linkedFrontendBlocks)
         {
             Dictionary<int, Dictionary<int, bool>> matrix = new Dictionary<int, Dictionary<int, bool>>();
+            bool isFalsePart = false;
 
             foreach (Block block in linkedFrontendBlocks)
             {
@@ -191,7 +193,15 @@ namespace LabBackend.Utils
                 }
                 if (block.ExitElseBlockId.HasValue)
                 {
-                    matrix[block.Id][block.ExitElseBlockId.Value] = true;
+                    if (isFalsePart)
+                    {
+                        matrix[block.Id][block.ExitElseBlockId.Value] = true;
+                        isFalsePart = false;
+                    }
+                    else
+                    {
+                        isFalsePart = true;
+                    }
                 }
             }
 
@@ -228,6 +238,9 @@ namespace LabBackend.Utils
                     case "if":
                         backendBlock = new ConditionBlock(languageCode, frontendBlock.Text);
                         break;
+                    case "else":
+                        backendBlock = new ElseBlock(languageCode);
+                        break;
                     case "end":
                         backendBlock = new EndBlock(languageCode);
                         break;
@@ -238,7 +251,8 @@ namespace LabBackend.Utils
 
                 bufferVariables.Push(response);
 
-                if (frontendBlock.Type == "if")
+                if (frontendBlock.Type == "if"
+                    || frontendBlock.Type == "else")
                 {
                     deep++;
                 }
@@ -254,6 +268,11 @@ namespace LabBackend.Utils
                     }
                     else
                     {
+                        if (frontendBlock.ExitElseBlockId != null)
+                        {
+                            deep--;
+                        }
+
                         Traverse(nextId);
                         isFalsePart = true;
                     }
