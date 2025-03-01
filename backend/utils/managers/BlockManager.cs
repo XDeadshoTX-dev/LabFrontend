@@ -80,6 +80,7 @@ namespace LabBackend.Utils
 
             int newId = 1;
             bool existElse = false;
+            bool inFalse = false;
 
             void Traverse(Block currentBlock)
             {
@@ -89,6 +90,12 @@ namespace LabBackend.Utils
                 if (currentBlock.Type != "if")
                 {
                     Block nextBlock = null;
+
+                    if (inFalse == true)
+                    {
+                        inFalse = false;
+                        buffer.Pop().ExitElseBlockId = newId;
+                    }
                     if (currentBlock.NextBlockId != null)
                     {
                         nextBlock = GetBlockById(blocksRAWFrontend, currentBlock.NextBlockId);
@@ -101,6 +108,7 @@ namespace LabBackend.Utils
                     {
                         newId++;
                         buffer.Push(currentBlock);
+                        inFalse = true;
                         return;
                     }
                     else if (currentBlock.Type == "end")
