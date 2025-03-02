@@ -13,7 +13,7 @@ namespace WpfApp2.backend.schemas.translate
             this.block = block;
             this.regOptions = RegexOptions.Singleline | RegexOptions.IgnoreCase;
 
-            pattern = @$"(^\s*if\s+__name__\s*==\s*['""]__main__['""]\s*:\s*\r?\n)(.*)$";
+            pattern = @$"(^\s*if\s+__name__\s*==\s*['""]__main__['""]\s*:\s*\r?\n)(.*)(?![\s\S]*if\s+__name__\s*==\s*['""]__main__['""])";
         }
 
         public override string InsertCode(Match match, string fileContent)
