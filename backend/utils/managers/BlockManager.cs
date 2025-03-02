@@ -256,7 +256,16 @@ namespace LabBackend.Utils
                 {
                     deep++;
                 }
+                
+
                 bool isFalsePart = false;
+                bool isElsePart = false;
+
+                if (frontendBlock.Type == "else")
+                {
+                    isElsePart = true;
+                }
+
                 foreach (var nextId in adjacencyMatrix[currentId].Keys)
                 {
                     if (isFalsePart)
@@ -271,11 +280,17 @@ namespace LabBackend.Utils
                         if (frontendBlock.ExitElseBlockId != null)
                         {
                             deep--;
+                            isElsePart = false;
                         }
 
                         Traverse(nextId);
                         isFalsePart = true;
                     }
+                }
+                if (isElsePart)
+                {
+                    deep--;
+                    isElsePart = false;
                 }
                 if (isFalsePart && frontendBlock.Type == "if")
                 {
