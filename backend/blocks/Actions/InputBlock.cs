@@ -77,7 +77,38 @@ std::cin >> {sanitizedData};";
 
             return sanitizedData;
         }
+        public override string ExecuteMultithread(int deep, Stack<string> bufferVariables)
+        {
+            string sanitizedData = string.Empty;
+            if (!IsValidAssignment(this.Content, ref sanitizedData, bufferVariables))
+            {
+                throw new Exception($"[Type: {this.Name}; Content: \"{sanitizedData}\"] Wrong pattern!");
+            }
 
+            switch (this.Language)
+            {
+                case "c":
+                    this.Code = @$"int {sanitizedData};
+fgets(input, sizeof(input), stdin);
+{sanitizedData} = atoi(input);";
+                    break;
+                case "c++":
+                    this.Code = @$"int {sanitizedData};
+std::cin >> {sanitizedData};";
+                    break;
+                case "c#":
+                    this.Code = $"int {sanitizedData} = int.Parse(Console.ReadLine());";
+                    break;
+                case "python":
+                    this.Code = $"{sanitizedData} = int(input())";
+                    break;
+                case "java":
+                    this.Code = $"int {sanitizedData} = Integer.parseInt(scan.nextLine());";
+                    break;
+            }
+
+            return this.Code;
+        }
         public override string ExecuteValidation(Stack<string> bufferVariables)
         {
             string sanitizedData = string.Empty;

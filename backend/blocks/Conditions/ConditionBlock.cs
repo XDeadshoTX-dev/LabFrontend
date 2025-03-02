@@ -103,7 +103,53 @@ namespace LabBackend.Blocks.Conditions
 
             return $"{this.Name} success";
         }
+        public override string ExecuteMultithread(int deep, Stack<string> bufferVariables)
+        {
+            string sanitizedData = string.Empty;
+            if (!IsValidCondition(this.Content, ref sanitizedData, bufferVariables))
+            {
+                throw new Exception($"[Type: {this.Name}; Content: \"{sanitizedData}\"] Wrong pattern");
+            }
 
+            string[] delimiters = { "<", "==" };
+
+            string usedDelimiter = null;
+            foreach (var delimiter in delimiters)
+            {
+                if (this.Content.Contains(delimiter))
+                {
+                    usedDelimiter = delimiter;
+                    break;
+                }
+            }
+
+            string[] parts = this.Content.Split(delimiters, StringSplitOptions.None);
+            string variableName = parts[0].Trim();
+            string value = parts[1].Trim();
+
+            switch (this.Language)
+            {
+                case "python":
+                    this.Code = @$"if {variableName} {usedDelimiter} {value}:";
+                    break;
+                case "c":
+                case "c++":
+                case "c#":
+                    this.Code = @$"if ({variableName} {usedDelimiter} {value})
+{{
+}}";
+                    break;
+                case "java":
+                    this.Code = @$"if ({variableName} {usedDelimiter} {value}) {{
+}}";
+                    break;
+                default:
+                    Console.WriteLine("Unknown programming language");
+                    return "error";
+            }
+
+            return this.Code;
+        }
         public override string ExecuteValidation(Stack<string> bufferVariables)
         {
             string sanitizedData = string.Empty;

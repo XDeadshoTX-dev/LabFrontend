@@ -41,7 +41,28 @@ namespace WpfApp2.backend.blocks.Conditions
 
             return $"{Name} success";
         }
+        public override string ExecuteMultithread(int deep, Stack<string> bufferVariables)
+        {
+            switch (this.Language)
+            {
+                case "c":
+                case "c++":
+                case "c#":
+                    this.Code = @"else
+{
+}";
+                    break;
+                case "python":
+                    this.Code = @"else:";
+                    break;
+                case "java":
+                    this.Code = @"else {
+}";
+                    break;
+            }
 
+            return this.Code;
+        }
         public override string ExecuteValidation(Stack<string> bufferVariables)
         {
             return $"{this.Name} success";

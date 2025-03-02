@@ -285,7 +285,8 @@ namespace LabBackend.Utils
                             do
                             {
                                 bufferVariables.Pop();
-                            } while (bufferVariables.Pop() != "ElseBlock success");
+                            } while (bufferVariables.Peek() != "ElseBlock success");
+                            bufferVariables.Pop();
                         }
 
                         Traverse(nextId);
@@ -394,7 +395,8 @@ namespace LabBackend.Utils
                             do
                             {
                                 bufferVariables.Pop();
-                            } while(bufferVariables.Pop() != "ElseBlock success");
+                            } while (bufferVariables.Peek() != "ElseBlock success");
+                            bufferVariables.Pop();
                         }
 
                         Traverse(nextId);
@@ -419,6 +421,7 @@ namespace LabBackend.Utils
             Traverse(startId);
 
             Thread[] threads = new Thread[adjacencyMatrix.Count];
+            string[] finishedTasks = new string[adjacencyMatrix.Count];
 
             foreach (var item in keyValuePairs)
             {
@@ -462,11 +465,33 @@ namespace LabBackend.Utils
                 
                 threads[blockIndex] = new Thread(() =>
                 {
-                    backendBlock.Execute(deepBlock, historyVariables);
+                    finishedTasks[blockIndex] = backendBlock.ExecuteMultithread(deepBlock, historyVariables);
                 });
                 threads[blockIndex].Start();
-                threads[blockIndex].Join();
             }
+
+            for (int i = 0; i < threads.Length; i++)
+            {
+                threads[i].Join();
+            }
+
+            AbstractBlock startBlock = new StartBlock(languageCode);
+
+            foreach (var item in keyValuePairs)
+            {
+                int blockId = item.Key + 1;
+                int blockIndex = item.Key;
+                int deepBlock = item.Value.Keys.First();
+
+                if (blockId != 1)
+                {
+                    finishedTasks[0] = startBlock.InsertCodeIntoMainMultithread(
+                        deepBlock,
+                        finishedTasks[0], 
+                        finishedTasks[blockIndex]);
+                }
+            }
+            startBlock.WriteAllText(finishedTasks[0]);
         }
     }
 }

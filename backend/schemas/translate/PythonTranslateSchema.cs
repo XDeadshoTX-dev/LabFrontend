@@ -16,7 +16,7 @@ namespace WpfApp2.backend.schemas.translate
             pattern = @$"(^\s*if\s+__name__\s*==\s*['""]__main__['""]\s*:\s*\r?\n)(.*)(?![\s\S]*if\s+__name__\s*==\s*['""]__main__['""])";
         }
 
-        public override string InsertCode(Match match, string fileContent)
+        public override string InsertCode(Match match)
         {
             string mainDeclaration = match.Groups[1].Value;
             string existingContent = match.Groups[2].Value;

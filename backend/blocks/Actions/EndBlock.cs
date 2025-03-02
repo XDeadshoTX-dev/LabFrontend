@@ -43,7 +43,32 @@ namespace LabBackend.Blocks.Actions
 
             return $"{this.Name} success";
         }
+        public override string ExecuteMultithread(int deep, Stack<string> bufferVariables)
+        {
+            switch (this.Language)
+            {
+                case "c":
+                    this.Code = "exit(0);";
+                    break;
+                case "c++":
+                    this.Code = "exit(0);";
+                    break;
+                case "c#":
+                    this.Code = "Environment.Exit(0);";
+                    break;
+                case "python":
+                    this.Code = "exit()";
+                    break;
+                case "java":
+                    this.Code = "System.exit(0);";
+                    break;
+                default:
+                    this.Code = "// Unsupported language";
+                    break;
+            }
 
+            return this.Code;
+        }
         public override string ExecuteValidation(Stack<string> bufferVariables)
         {
             return $"{this.Name} success";

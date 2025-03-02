@@ -23,7 +23,7 @@ namespace LabBackend.Utils.Abstract
         protected int LanguageIndent { get; set; }
 
         protected string FileName { get; set; }
-        protected string Code { get; set; }
+        public string Code { get; set; }
         protected string PatternValidation { get; set; }
 
         public AbstractBlock(string languageCode, string content)
@@ -99,15 +99,15 @@ namespace LabBackend.Utils.Abstract
 
             return string.Join(Environment.NewLine, lines);
         }
-        protected string ReadAllText()
+        public string ReadAllText()
         {
             return File.ReadAllText(this.FileName);
         }
-        protected void WriteAllText(string content)
+        public void WriteAllText(string content)
         {
             File.WriteAllText(this.FileName, content);
         }
-        protected string InsertCodeIntoMain(int deep, string fileContent)
+        public string InsertCodeIntoMain(int deep, string fileContent)
         {
             AbstractTranslateSchema translateSchema = AbstractTranslateSchema.GetSchema(
                 deep, 
@@ -122,9 +122,33 @@ namespace LabBackend.Utils.Abstract
                         deep, 
                         this);
 
-                    string result = translateSchema.InsertCode( 
-                        match,
-                        fileContent);
+                    string result = translateSchema.InsertCode(match);
+
+                    return result;
+                },
+                translateSchema.regOptions
+            );
+
+            return updatedContent;
+        }
+        public string InsertCodeIntoMainMultithread(int deep, string fileContent, string code)
+        {
+            this.Code = code;
+            AbstractTranslateSchema translateSchema = AbstractTranslateSchema.GetSchema(
+                deep,
+                this);
+
+            string updatedContent = Regex.Replace(
+                fileContent,
+                translateSchema.pattern,
+                match =>
+                {
+                    AbstractTranslateSchema translateSchema = AbstractTranslateSchema.GetSchema(
+                        deep,
+                        this);
+
+                    string result = translateSchema.InsertCode(
+                        match);
 
                     return result;
                 },

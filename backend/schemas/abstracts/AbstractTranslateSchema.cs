@@ -18,7 +18,7 @@ namespace WpfApp2.backend.schemas.@abstract
         protected int deepSchema = 0;
         protected AbstractBlock block;
 
-        public abstract string InsertCode(Match match, string fileContent);
+        public abstract string InsertCode(Match match);
         public static AbstractTranslateSchema GetSchema(int deep, AbstractBlock block)
         {
             if (block.Language == "c")
