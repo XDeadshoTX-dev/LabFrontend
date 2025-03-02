@@ -18,7 +18,7 @@ namespace WpfApp2.backend.schemas.translate
             this.regOptions = RegexOptions.Singleline | RegexOptions.IgnoreCase;
 
             string amountSpaces = this.block.GetIndent(this.deepSchema);
-            pattern = $@"({amountSpaces}\{{)(.*?)(\n{amountSpaces}\}})";
+            pattern = $@"({amountSpaces}\{{)(.*?)(\n{amountSpaces}\}})(?![\s\S]*\n{amountSpaces}\}})";
         }
         public override string InsertCode(Match match, string fileContent)
         {
