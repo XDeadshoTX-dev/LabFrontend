@@ -18,7 +18,7 @@ namespace WpfApp2.backend.schemas.translate
             this.regOptions = RegexOptions.Multiline;
 
             int amountSpaces = 4 * this.deepSchema;
-            pattern = $@"^\s{{{amountSpaces}}}(?<before>[^\{{]*)\{{\s*\n(?<rawContent>[\s\S]*?)^\s{{{amountSpaces}}}\}}";
+            pattern = $@"(?ms)^\s{{{amountSpaces}}}(?<before>[^\{{]*)\{{\s*\n(?<rawContent>[\s\S]*?)(^\s{{{amountSpaces}}}\}})(?![\s\S]*^\s{{{amountSpaces}}}\}})";
         }
         public override string InsertCode(Match match, string fileContent)
         {
