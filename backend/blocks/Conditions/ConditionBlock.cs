@@ -103,5 +103,16 @@ namespace LabBackend.Blocks.Conditions
 
             return $"{this.Name} success";
         }
+
+        public override string ExecuteValidation(Stack<string> bufferVariables)
+        {
+            string sanitizedData = string.Empty;
+            if (!IsValidCondition(this.Content, ref sanitizedData, bufferVariables))
+            {
+                throw new Exception($"[Type: {this.Name}; Content: \"{sanitizedData}\"] Wrong pattern");
+            }
+
+            return $"{this.Name} success";
+        }
     }
 }

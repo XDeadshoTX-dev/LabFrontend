@@ -41,5 +41,10 @@ namespace WpfApp2.backend.blocks.Conditions
 
             return $"{Name} success";
         }
+
+        public override string ExecuteValidation(Stack<string> bufferVariables)
+        {
+            return $"{this.Name} success";
+        }
     }
 }

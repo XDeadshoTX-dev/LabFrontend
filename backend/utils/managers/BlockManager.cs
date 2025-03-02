@@ -207,7 +207,7 @@ namespace LabBackend.Utils
 
             return matrix;
         }
-        public string TranslateCode(string languageCode, List<Block> linkedFrontendBlocks, Dictionary<int, Dictionary<int, bool>> adjacencyMatrix)
+        public void TranslateCode(string languageCode, List<Block> linkedFrontendBlocks, Dictionary<int, Dictionary<int, bool>> adjacencyMatrix)
         {
             Stack<string> bufferVariables = new Stack<string>();
             int startId = adjacencyMatrix.Keys.First();
@@ -281,6 +281,11 @@ namespace LabBackend.Utils
                         {
                             deep--;
                             isElsePart = false;
+
+                            do
+                            {
+                                bufferVariables.Pop();
+                            } while (bufferVariables.Pop() != "ElseBlock success");
                         }
 
                         Traverse(nextId);
@@ -296,11 +301,172 @@ namespace LabBackend.Utils
                 {
                     deep--;
                 }
-                bufferVariables.Pop();
+                if (bufferVariables.Count != 0)
+                {
+                    bufferVariables.Pop();
+                }
             }
 
             Traverse(startId);
-            return string.Empty;
+        }
+        public void TranslateCodeMultithread(string languageCode, List<Block> linkedFrontendBlocks, Dictionary<int, Dictionary<int, bool>> adjacencyMatrix)
+        {
+            Stack<string> bufferVariables = new Stack<string>();
+            int startId = adjacencyMatrix.Keys.First();
+            Dictionary<int, Dictionary<int, Stack<string>>> keyValuePairs = new Dictionary<int, Dictionary<int, Stack<string>>>();
+            int deep = 0;
+            int deepIndex = 0;
+
+            void Traverse(int currentId)
+            {
+                Block frontendBlock = GetBlockById(linkedFrontendBlocks, currentId);
+                AbstractBlock backendBlock;
+
+                switch (frontendBlock.Type)
+                {
+                    case "start":
+                        backendBlock = new StartBlock(languageCode);
+                        break;
+                    case "AssignmentBlock":
+                        backendBlock = new AssignmentBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "ConstantAssignmentBlock":
+                        backendBlock = new ConstantAssignmentBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "InputBlock":
+                        backendBlock = new InputBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "PrintBlock":
+                        backendBlock = new PrintBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "if":
+                        backendBlock = new ConditionBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "else":
+                        backendBlock = new ElseBlock(languageCode);
+                        break;
+                    case "end":
+                        backendBlock = new EndBlock(languageCode);
+                        break;
+                    default:
+                        throw new NotSupportedException($"Block type '{frontendBlock.Type}' is not supported.");
+                }
+                string response = backendBlock.ExecuteValidation(bufferVariables);
+
+                keyValuePairs[deepIndex] = new Dictionary<int, Stack<string>>();
+                keyValuePairs[deepIndex][deep] = new Stack<string>(bufferVariables);
+                deepIndex++;
+
+                bufferVariables.Push(response);
+
+
+                if (frontendBlock.Type == "if"
+                    || frontendBlock.Type == "else")
+                {
+                    deep++;
+                }
+
+
+                bool isFalsePart = false;
+                bool isElsePart = false;
+
+                if (frontendBlock.Type == "else")
+                {
+                    isElsePart = true;
+                }
+
+                foreach (var nextId in adjacencyMatrix[currentId].Keys)
+                {
+                    if (isFalsePart)
+                    {
+                        deep--;
+
+                        Traverse(nextId);
+                        isFalsePart = false;
+                    }
+                    else
+                    {
+                        if (frontendBlock.ExitElseBlockId != null)
+                        {
+                            deep--;
+                            isElsePart = false;
+
+                            do
+                            {
+                                bufferVariables.Pop();
+                            } while(bufferVariables.Pop() != "ElseBlock success");
+                        }
+
+                        Traverse(nextId);
+                        isFalsePart = true;
+                    }
+                }
+                if (isElsePart)
+                {
+                    deep--;
+                    isElsePart = false;
+                }
+                if (isFalsePart && frontendBlock.Type == "if")
+                {
+                    deep--;
+                }
+                if (bufferVariables.Count != 0)
+                {
+                    bufferVariables.Pop();
+                }
+            }
+
+            Traverse(startId);
+
+            Thread[] threads = new Thread[adjacencyMatrix.Count];
+
+            foreach (var item in keyValuePairs)
+            {
+                int blockId = item.Key + 1;
+                int blockIndex = item.Key;
+                int deepBlock = item.Value.Keys.First();
+                Stack<string> historyVariables = item.Value.Values.First();
+
+                Block frontendBlock = GetBlockById(linkedFrontendBlocks, blockId);
+                AbstractBlock backendBlock;
+
+                switch (frontendBlock.Type)
+                {
+                    case "start":
+                        backendBlock = new StartBlock(languageCode);
+                        break;
+                    case "AssignmentBlock":
+                        backendBlock = new AssignmentBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "ConstantAssignmentBlock":
+                        backendBlock = new ConstantAssignmentBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "InputBlock":
+                        backendBlock = new InputBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "PrintBlock":
+                        backendBlock = new PrintBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "if":
+                        backendBlock = new ConditionBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "else":
+                        backendBlock = new ElseBlock(languageCode);
+                        break;
+                    case "end":
+                        backendBlock = new EndBlock(languageCode);
+                        break;
+                    default:
+                        throw new NotSupportedException($"Block type '{frontendBlock.Type}' is not supported.");
+                }
+                
+                threads[blockIndex] = new Thread(() =>
+                {
+                    backendBlock.Execute(deepBlock, historyVariables);
+                });
+                threads[blockIndex].Start();
+                threads[blockIndex].Join();
+            }
         }
     }
 }

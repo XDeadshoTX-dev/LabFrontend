@@ -88,5 +88,19 @@ namespace LabBackend.Blocks.Actions
 
             return variableName;
         }
+
+        public override string ExecuteValidation(Stack<string> bufferVariables)
+        {
+            string sanitizedData = string.Empty;
+            if (!IsValidAssignment(this.Content, ref sanitizedData, bufferVariables))
+            {
+                throw new Exception($"[Type: {this.Name}; Content: \"{sanitizedData}\"] Wrong pattern");
+            }
+
+            string[] parts = sanitizedData.Split('=');
+            string variableName = parts[0].Trim();
+
+            return variableName;
+        }
     }
 }

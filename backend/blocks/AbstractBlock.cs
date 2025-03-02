@@ -140,5 +140,13 @@ namespace LabBackend.Utils.Abstract
         {
             return string.Empty;
         }
+        public virtual string ExecuteMultithread(int deep, Stack<string> bufferVariables)
+        {
+            return string.Empty;
+        }
+        public virtual string ExecuteValidation(Stack<string> bufferVariables)
+        {
+            return string.Empty;
+        }
     }
 }

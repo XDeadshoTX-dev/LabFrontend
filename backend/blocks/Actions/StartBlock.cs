@@ -74,5 +74,10 @@ public class Main {
 
             return $"{this.Name} success";
         }
+
+        public override string ExecuteValidation(Stack<string> bufferVariables)
+        {
+            return $"{this.Name} success";
+        }
     }
 }
