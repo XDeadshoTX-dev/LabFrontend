@@ -1,0 +1,11 @@
+{
+  "AssignmentBlock": "Sijoitus V1=V2",
+  "ConstantAssignmentBlock": "Sijoitus V=C",
+  "InputBlock": "Syöttö V",
+  "PrintBlock": "Tulosta V",
+  "if": "if",
+  "else": "else",
+  "SaveAll": "Tallenna kaaviot",
+  "LoadAll": "Lataa kaaviot",
+  "Translate": "Lähetys"
+}

@@ -1,0 +1,11 @@
+{
+  "AssignmentBlock": "Assignment V1=V2",
+  "ConstantAssignmentBlock": "Assignment V=C",
+  "InputBlock": "Input V",
+  "PrintBlock": "Print V",
+  "if": "if",
+  "else": "else",
+  "SaveAll": "Save flowcharts",
+  "LoadAll": "Load flowcharts",
+  "Translate": "Broadcasting"
+}

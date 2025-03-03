@@ -1,0 +1,11 @@
+{
+  "AssignmentBlock": "Tildeling V1=V2",
+  "ConstantAssignmentBlock": "Tildeling V=C",
+  "InputBlock": "Indtastning V",
+  "PrintBlock": "Udskriv V",
+  "if": "if",
+  "else": "else",
+  "SaveAll": "Gem flowcharts",
+  "LoadAll": "Indlæs flowcharts",
+  "Translate": "Udsendelse"
+}

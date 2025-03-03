@@ -1,0 +1,11 @@
+{
+  "AssignmentBlock": "Affectation V1=V2",
+  "ConstantAssignmentBlock": "Affectation V=C",
+  "InputBlock": "Entrée V",
+  "PrintBlock": "Imprimer V",
+  "if": "if",
+  "else": "else",
+  "SaveAll": "Enregistrer les organigrammes",
+  "LoadAll": "Charger les organigrammes",
+  "Translate": "Diffusion"
+}

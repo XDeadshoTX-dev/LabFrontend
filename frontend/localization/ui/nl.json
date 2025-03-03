@@ -1,0 +1,11 @@
+{
+  "AssignmentBlock": "Toewijzing V1=V2",
+  "ConstantAssignmentBlock": "Toewijzing V=C",
+  "InputBlock": "Invoer V",
+  "PrintBlock": "Afdrukken V",
+  "if": "if",
+  "else": "else",
+  "SaveAll": "Stroomschema's opslaan",
+  "LoadAll": "Stroomschema's laden",
+  "Translate": "Uitzending"
+}
