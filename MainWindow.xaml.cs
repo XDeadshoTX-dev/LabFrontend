@@ -23,16 +23,25 @@ namespace BlockLinkingApp
     {
         UIManager uiManager;
         private static int _nextBlockId = 1;
+        private Dictionary<string, Dictionary<string, Dictionary<string, string>>> translation;
+        private string currentLanguage = "en";
         public MainWindow()
         {
             InitializeComponent();
             uiManager = new UIManager(WorkspaceCanvas);
-
+            LoadTranslation();
             InitWorkspace();
-            InitComboBox();
+            UpdateUI();
             this.KeyDown += MainWindow_DelDown;
             this.KeyDown += MainWindow_InsDown;
+
+
+
+
+
             UpdateBlockCounter();
+
+
         }
 
         private void InitWorkspace()
@@ -60,15 +69,123 @@ namespace BlockLinkingApp
             AddBlockToCanvas(endBlock);
         }
 
-        private void InitComboBox()
+
+
+        private void LoadTranslation()
         {
-            LanguageComboBox.Items.Add("C");
-            LanguageComboBox.Items.Add("C++");
-            LanguageComboBox.Items.Add("C#");
-            LanguageComboBox.Items.Add("Java");
-            LanguageComboBox.Items.Add("Python");
-            LanguageComboBox.SelectedIndex = 0;
+            string jsonPath = "translation.json";
+            try
+            {
+                if (File.Exists(jsonPath))
+                {
+                    string json = File.ReadAllText(jsonPath);
+                    translation = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Dictionary<string, string>>>>(json);
+                    if (translation == null || !translation.ContainsKey("en"))
+                    {
+                        InitializeDefaultTranslation();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading translation: {ex.Message}");
+                InitializeDefaultTranslation();
+            }
         }
+
+        private void InitializeDefaultTranslation()
+        {
+            translation = new Dictionary<string, Dictionary<string, Dictionary<string, string>>>
+            {
+                ["en"] = new Dictionary<string, Dictionary<string, string>>
+                {
+                    ["buttons"] = new Dictionary<string, string>
+                    {
+                        ["AssignmentBlock"] = "Assignment Block",
+                        ["ConstantAssignmentBlock"] = "Constant Assignment Block",
+                        ["InputBlock"] = "Input Block",
+                        ["PrintBlock"] = "Print Block",
+                        ["if"] = "If Block",
+                        ["else"] = "Else Block",
+                        ["SaveAll"] = "Save All",
+                        ["LoadAll"] = "Load All",
+                        ["Translate"] = "Translate into code"
+                    }
+                }
+            };
+        }
+
+        private void UpdateUI()
+        {
+            if (translation == null || !translation.ContainsKey(currentLanguage))
+            {
+                currentLanguage = "en"; 
+                if (translation == null) InitializeDefaultTranslation();
+            }
+
+            AssignmentButton.Content = GetTranslation("buttons", "AssignmentBlock", "Assignment Block");
+            ConstantAssignmentButton.Content = GetTranslation("buttons", "ConstantAssignmentBlock", "Constant Assignment Block");
+            InputButton.Content = GetTranslation("buttons", "InputBlock", "Input Block");
+            PrintButton.Content = GetTranslation("buttons", "PrintBlock", "Print Block");
+            IfButton.Content = GetTranslation("buttons", "if", "If Block");
+            ElseButton.Content = GetTranslation("buttons", "else", "Else Block");
+            SaveButton.Content = GetTranslation("buttons", "SaveAll", "Save All");
+            LoadButton.Content = GetTranslation("buttons", "LoadAll", "Load All");
+            TranslateButton.Content = GetTranslation("buttons", "Translate", "Translate into code");
+
+        }
+
+        private string GetTranslation(string category, string key, string defaultValue)
+        {
+            if (translation.ContainsKey(currentLanguage) &&
+                translation[currentLanguage].ContainsKey(category) &&
+                translation[currentLanguage][category].ContainsKey(key))
+            {
+                return translation[currentLanguage][category][key];
+            }
+            return defaultValue;
+        }
+
+        private void UILanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (UILanguageComboBox.SelectedItem is ComboBoxItem selectedItem)
+            {
+                currentLanguage = selectedItem.Tag.ToString();
+                UpdateUI();
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         private void AddBlockButton_Click(object sender, RoutedEventArgs e)
         {

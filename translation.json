@@ -1,0 +1,249 @@
+{
+  "en": {
+    "buttons": {
+      "AssignmentBlock": "Assignment Block",
+      "ConstantAssignmentBlock": "Constant Assignment Block",
+      "InputBlock": "Input Block",
+      "PrintBlock": "Print Block",
+      "if": "If Block",
+      "else": "Else Block",
+      "SaveAll": "Save All",
+      "LoadAll": "Load All",
+      "Translate": "Translate into code"
+    }
+  },
+  "uk": {
+    "buttons": {
+      "AssignmentBlock": "Блок Присвоєння",
+      "ConstantAssignmentBlock": "Блок призначення констант",
+      "InputBlock": "Блок введення",
+      "PrintBlock": "Блок виводу",
+      "if": "Блок якщо",
+      "else": "Блок інакше",
+      "SaveAll": "Зберегти все",
+      "LoadAll": "Завантажити все",
+      "Translate": "Транслювати в код"
+    }
+  },
+  "de": {
+    "buttons": {
+      "AssignmentBlock": "Zuweisungsblock",
+      "ConstantAssignmentBlock": "Konstanter Zuweisungsblock",
+      "InputBlock": "Eingabeblock",
+      "PrintBlock": "Ausgabeblock",
+      "if": "Wenn-Block",
+      "else": "Sonst-Block",
+      "SaveAll": "Alles Speichern",
+      "LoadAll": "Alles Laden",
+      "Translate": "In Code übersetzen"
+    }
+  },
+  "fr": {
+    "buttons": {
+      "AssignmentBlock": "Bloc d'affectation",
+      "ConstantAssignmentBlock": "Bloc d'affectation constante",
+      "InputBlock": "Bloc d'entrée",
+      "PrintBlock": "Bloc d'impression",
+      "if": "Bloc Si",
+      "else": "Bloc Sinon",
+      "SaveAll": "Tout sauvegarder",
+      "LoadAll": "Tout charger",
+      "Translate": "Traduire en code"
+    }
+  },
+  "es": {
+    "buttons": {
+      "AssignmentBlock": "Bloque de asignación",
+      "ConstantAssignmentBlock": "Bloque de asignación constante",
+      "InputBlock": "Bloque de entrada",
+      "PrintBlock": "Bloque de impresión",
+      "if": "Bloque Si",
+      "else": "Bloque Sino",
+      "SaveAll": "Guardar todo",
+      "LoadAll": "Cargar todo",
+      "Translate": "Traducir a código"
+    }
+  },
+  "it": {
+    "buttons": {
+      "AssignmentBlock": "Blocco di assegnazione",
+      "ConstantAssignmentBlock": "Blocco di assegnazione costante",
+      "InputBlock": "Blocco di input",
+      "PrintBlock": "Blocco di stampa",
+      "if": "Blocco Se",
+      "else": "Blocco Altrimenti",
+      "SaveAll": "Salva tutto",
+      "LoadAll": "Carica tutto",
+      "Translate": "Traduci in codice"
+    }
+  },
+  "pt": {
+    "buttons": {
+      "AssignmentBlock": "Bloco de atribuição",
+      "ConstantAssignmentBlock": "Bloco de atribuição constante",
+      "InputBlock": "Bloco de entrada",
+      "PrintBlock": "Bloco de impressão",
+      "if": "Bloco Se",
+      "else": "Bloco Senão",
+      "SaveAll": "Salvar tudo",
+      "LoadAll": "Carregar tudo",
+      "Translate": "Traduzir para código"
+    }
+  },
+  "pl": {
+    "buttons": {
+      "AssignmentBlock": "Blok przypisania",
+      "ConstantAssignmentBlock": "Blok przypisania stałej",
+      "InputBlock": "Blok wejścia",
+      "PrintBlock": "Blok wydruku",
+      "if": "Blok Jeśli",
+      "else": "Blok W przeciwnym razie",
+      "SaveAll": "Zapisz wszystko",
+      "LoadAll": "Załaduj wszystko",
+      "Translate": "Przetłumacz na kod"
+    }
+  },
+  "nl": {
+    "buttons": {
+      "AssignmentBlock": "Toewijzingsblok",
+      "ConstantAssignmentBlock": "Constante toewijzingsblok",
+      "InputBlock": "Invoerblok",
+      "PrintBlock": "Afdrukken blok",
+      "if": "Als-blok",
+      "else": "Anders-blok",
+      "SaveAll": "Alles opslaan",
+      "LoadAll": "Alles laden",
+      "Translate": "Vertaal naar code"
+    }
+  },
+  "sv": {
+    "buttons": {
+      "AssignmentBlock": "Tilldelningsblock",
+      "ConstantAssignmentBlock": "Konstant tilldelningsblock",
+      "InputBlock": "Inmatningsblock",
+      "PrintBlock": "Utskriftsblock",
+      "if": "Om-block",
+      "else": "Annars-block",
+      "SaveAll": "Spara allt",
+      "LoadAll": "Ladda allt",
+      "Translate": "Översätt till kod"
+    }
+  },
+  "da": {
+    "buttons": {
+      "AssignmentBlock": "Tildelingsblok",
+      "ConstantAssignmentBlock": "Konstant tildelingsblok",
+      "InputBlock": "Indtastningsblok",
+      "PrintBlock": "Udskriftsblok",
+      "if": "Hvis-blok",
+      "else": "Ellers-blok",
+      "SaveAll": "Gem alt",
+      "LoadAll": "Indlæs alt",
+      "Translate": "Oversæt til kode"
+    }
+  },
+  "fi": {
+    "buttons": {
+      "AssignmentBlock": "Sijoituslohko",
+      "ConstantAssignmentBlock": "Vakiosijoituslohko",
+      "InputBlock": "Syöttölohko",
+      "PrintBlock": "Tulostuslohko",
+      "if": "Jos-lohko",
+      "else": "Muuten-lohko",
+      "SaveAll": "Tallenna kaikki",
+      "LoadAll": "Lataa kaikki",
+      "Translate": "Käännä koodiksi"
+    }
+  },
+  "cs": {
+    "buttons": {
+      "AssignmentBlock": "Přiřazovací blok",
+      "ConstantAssignmentBlock": "Konstantní přiřazovací blok",
+      "InputBlock": "Vstupní blok",
+      "PrintBlock": "Tiskový blok",
+      "if": "Pokud-blok",
+      "else": "Jinak-blok",
+      "SaveAll": "Uložit vše",
+      "LoadAll": "Načíst vše",
+      "Translate": "Přeložit do kódu"
+    }
+  },
+  "hu": {
+    "buttons": {
+      "AssignmentBlock": "Értékadási blokk",
+      "ConstantAssignmentBlock": "Állandó értékadási blokk",
+      "InputBlock": "Beviteli blokk",
+      "PrintBlock": "Nyomtatási blokk",
+      "if": "Ha-blokk",
+      "else": "Különben-blokk",
+      "SaveAll": "Mindent ment",
+      "LoadAll": "Mindent betölt",
+      "Translate": "Fordítás kódba"
+    }
+  },
+  "ja": {
+    "buttons": {
+      "AssignmentBlock": "代入ブロック",
+      "ConstantAssignmentBlock": "定数代入ブロック",
+      "InputBlock": "入力ブロック",
+      "PrintBlock": "出力ブロック",
+      "if": "もしブロック",
+      "else": "そうでなければブロック",
+      "SaveAll": "すべて保存",
+      "LoadAll": "すべて読み込み",
+      "Translate": "コードに翻訳"
+    }
+  },
+  "ko": {
+    "buttons": {
+      "AssignmentBlock": "할당 블록",
+      "ConstantAssignmentBlock": "상수 할당 블록",
+      "InputBlock": "입력 블록",
+      "PrintBlock": "출력 블록",
+      "if": "만약 블록",
+      "else": "그 밖의 경우 블록",
+      "SaveAll": "모두 저장",
+      "LoadAll": "모두 로드",
+      "Translate": "코드로 번역"
+    }
+  },
+  "zh": {
+    "buttons": {
+      "AssignmentBlock": "赋值块",
+      "ConstantAssignmentBlock": "常量赋值块",
+      "InputBlock": "输入块",
+      "PrintBlock": "打印块",
+      "if": "如果块",
+      "else": "否则块",
+      "SaveAll": "保存全部",
+      "LoadAll": "加载全部",
+      "Translate": "翻译成代码"
+    }
+  },
+  "ar": {
+    "buttons": {
+      "AssignmentBlock": "كتلة التعيين",
+      "ConstantAssignmentBlock": "كتلة تعيين الثابت",
+      "InputBlock": "كتلة الإدخال",
+      "PrintBlock": "كتلة الطباعة",
+      "if": "كتلة إذا",
+      "else": "كتلة أخرى",
+      "SaveAll": "حفظ الكل",
+      "LoadAll": "تحميل الكل",
+      "Translate": "ترجمة إلى كود"
+    }
+  },
+  "tr": {
+    "buttons": {
+      "AssignmentBlock": "Atama Bloğu",
+      "ConstantAssignmentBlock": "Sabit Atama Bloğu",
+      "InputBlock": "Giriş Bloğu",
+      "PrintBlock": "Yazdırma Bloğu",
+      "if": "Eğer Blok",
+      "else": "Değilse Blok",
+      "SaveAll": "Tümünü Kaydet",
+      "LoadAll": "Tümünü Yükle",
+      "Translate": "Koda Çevir"
+    }
+  }
+}
