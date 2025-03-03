@@ -1,0 +1,11 @@
+{
+  "AssignmentBlock": "Asignación V1=V2",
+  "ConstantAssignmentBlock": "Asignación V=C",
+  "InputBlock": "Entrada V",
+  "PrintBlock": "Imprimir V",
+  "if": "if",
+  "else": "else",
+  "SaveAll": "Guardar diagramas de flujo",
+  "LoadAll": "Cargar diagramas de flujo",
+  "Translate": "Transmisión"
+}

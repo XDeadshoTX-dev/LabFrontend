@@ -1,0 +1,11 @@
+{
+  "AssignmentBlock": "Przypisanie V1=V2",
+  "ConstantAssignmentBlock": "Przypisanie V=C",
+  "InputBlock": "Wejście V",
+  "PrintBlock": "Drukuj V",
+  "if": "if",
+  "else": "else",
+  "SaveAll": "Zapisz schematy blokowe",
+  "LoadAll": "Załaduj schematy blokowe",
+  "Translate": "Nadawanie"
+}

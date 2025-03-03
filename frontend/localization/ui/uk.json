@@ -1,0 +1,11 @@
+{
+  "AssignmentBlock": "Присвоєння V1=V2",
+  "ConstantAssignmentBlock": "Присвоєння V=C",
+  "InputBlock": "Введення V",
+  "PrintBlock": "Друк V",
+  "if": "if",
+  "else": "else",
+  "SaveAll": "Зберегти блок-схеми",
+  "LoadAll": "Завантажити блок-схеми",
+  "Translate": "Трансляція"
+}
