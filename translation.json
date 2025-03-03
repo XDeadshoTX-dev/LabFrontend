@@ -1,0 +1,41 @@
+{
+  "en": {
+    "buttons": {
+      "AssignmentBlock": "Assignment Block",
+      "ConstantAssignmentBlock": "Constant Assignment Block",
+      "InputBlock": "Input Block",
+      "PrintBlock": "Print Block",
+      "if": "If Block",
+      "else": "Else Block",
+      "SaveAll": "Save All",
+      "LoadAll": "Load All",
+      "Translate": "Translate into code"
+    }
+  },
+  "uk": {
+    "buttons": {
+      "AssignmentBlock": "Блок Присвоєння",
+      "ConstantAssignmentBlock": "Блок призначення констант",
+      "InputBlock": "Блок введення",
+      "PrintBlock": "Блок виводу",
+      "if": "Блок якщо",
+      "else": "Блок інакше",
+      "SaveAll": "Зберегти все",
+      "LoadAll": "Завантажити все",
+      "Translate": "Транслювати в код"
+    }
+  },
+  "de": {
+    "buttons": {
+      "AssignmentBlock": "Zuweisungsblock",
+      "ConstantAssignmentBlock": "Konstanter Zuweisungsblock",
+      "InputBlock": "Eingabeblock",
+      "PrintBlock": "Ausgabeblock",
+      "if": "Wenn-Block",
+      "else": "Sonst-Block",
+      "SaveAll": "Alles Speichern",
+      "LoadAll": "Alles Laden",
+      "Translate": "In Code übersetzen"
+    }
+  }
+}
