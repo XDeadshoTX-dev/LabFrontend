@@ -74,5 +74,44 @@ namespace LabBackend.Blocks.Actions
 
             return $"{this.Name} success";
         }
+        public override string ExecuteMultithread(int deep, Stack<string> bufferVariables)
+        {
+            string sanitizedData = string.Empty;
+            if (!IsValidAssignment(this.Content, ref sanitizedData, bufferVariables))
+            {
+                throw new Exception($"[Type: {this.Name}; Content: \"{sanitizedData}\"] Wrong pattern");
+            }
+
+            switch (this.Language)
+            {
+                case "c":
+                    this.Code = $"printf(\"%d\\n\", {sanitizedData});";
+                    break;
+                case "c++":
+                    this.Code = $"std::cout << {sanitizedData} << std::endl;";
+                    break;
+                case "c#":
+                    this.Code = $"Console.WriteLine({sanitizedData});";
+                    break;
+                case "python":
+                    this.Code = $"print({sanitizedData})";
+                    break;
+                case "java":
+                    this.Code = $"System.out.println({sanitizedData});";
+                    break;
+            }
+
+            return this.Code;
+        }
+        public override string ExecuteValidation(Stack<string> bufferVariables)
+        {
+            string sanitizedData = string.Empty;
+            if (!IsValidAssignment(this.Content, ref sanitizedData, bufferVariables))
+            {
+                throw new Exception($"[Type: {this.Name}; Content: \"{sanitizedData}\"] Wrong pattern");
+            }
+
+            return $"{this.Name} success";
+        }
     }
 }

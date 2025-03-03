@@ -3,67 +3,61 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace LabBackend.Blocks.Actions
+namespace WpfApp2.backend.blocks.Conditions
 {
-    public class EndBlock : AbstractBlock
+    public class ElseBlock : AbstractBlock
     {
-        public EndBlock(string languageCode) : base(languageCode, "")
+        public ElseBlock(string languageCode) : base(languageCode, "")
         {
-            this.Name = "end";
+            Name = "ElseBlock";
+            PatternValidation = @"^[a-zA-Z_]\w*$";
         }
         public override string Execute(int deep, Stack<string> bufferVariables)
         {
             switch (this.Language)
             {
                 case "c":
-                    this.Code = "exit(0);";
-                    break;
                 case "c++":
-                    this.Code = "exit(0);";
-                    break;
                 case "c#":
-                    this.Code = "Environment.Exit(0);";
+                    this.Code = @"else
+{
+}";
                     break;
                 case "python":
-                    this.Code = "exit()";
+                    this.Code = @"else:";
                     break;
                 case "java":
-                    this.Code = "System.exit(0);";
-                    break;
-                default:
-                    this.Code = "// Unsupported language";
+                    this.Code = @"else {
+}";
                     break;
             }
 
-            string fileContent = this.ReadAllText();
+            string fileContent = ReadAllText();
             string updatedContent = InsertCodeIntoMain(deep, fileContent);
-            this.WriteAllText(updatedContent);
+            WriteAllText(updatedContent);
 
-            return $"{this.Name} success";
+            return $"{Name} success";
         }
         public override string ExecuteMultithread(int deep, Stack<string> bufferVariables)
         {
             switch (this.Language)
             {
                 case "c":
-                    this.Code = "exit(0);";
-                    break;
                 case "c++":
-                    this.Code = "exit(0);";
-                    break;
                 case "c#":
-                    this.Code = "Environment.Exit(0);";
+                    this.Code = @"else
+{
+}";
                     break;
                 case "python":
-                    this.Code = "exit()";
+                    this.Code = @"else:";
                     break;
                 case "java":
-                    this.Code = "System.exit(0);";
-                    break;
-                default:
-                    this.Code = "// Unsupported language";
+                    this.Code = @"else {
+}";
                     break;
             }
 

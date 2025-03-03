@@ -28,6 +28,7 @@ namespace WpfApp2.frontend.blocks
                 NextBlockId = this.NextBlockId,
                 TrueBlockId = this.TrueBlockId,
                 FalseBlockId = this.FalseBlockId,
+                ExitElseBlockId = this.ExitElseBlockId,
                 Position = this.Position,
             };
         }

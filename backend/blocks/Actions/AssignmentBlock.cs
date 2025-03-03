@@ -79,7 +79,50 @@ namespace LabBackend.Blocks.Actions
             string updatedContent = InsertCodeIntoMain(deep, fileContent);
             this.WriteAllText(updatedContent);
 
-            return "assign success";
+            return $"{this.Name} success";
+        }
+        public override string ExecuteMultithread(int deep, Stack<string> bufferVariables)
+        {
+            string sanitizedData = string.Empty;
+            if (!IsValidAssignment(this.Content, ref sanitizedData, bufferVariables))
+            {
+                throw new Exception($"[Type: {this.Name}; Content: \"{sanitizedData}\"] Wrong pattern");
+            }
+
+            string[] variables = sanitizedData.Split('=');
+            if (variables.Length != 2)
+            {
+                throw new ArgumentException("Data should be in format 'V1=V2'");
+            }
+            string v1 = variables[0].Trim();
+            string v2 = variables[1].Trim();
+
+            switch (this.Language)
+            {
+                case "c":
+                case "c++":
+                case "c#":
+                case "java":
+                    this.Code = $"{v1} = {v2};";
+                    break;
+                case "python":
+                    this.Code = $"{v1} = {v2}";
+                    break;
+                default:
+                    throw new NotSupportedException($"Programming language '{this.Language}' is not supported.");
+            }
+
+            return this.Code;
+        }
+        public override string ExecuteValidation(Stack<string> bufferVariables)
+        {
+            string sanitizedData = string.Empty;
+            if (!IsValidAssignment(this.Content, ref sanitizedData, bufferVariables))
+            {
+                throw new Exception($"[Type: {this.Name}; Content: \"{sanitizedData}\"] Wrong pattern");
+            }
+
+            return $"{this.Name} success";
         }
     }
 }

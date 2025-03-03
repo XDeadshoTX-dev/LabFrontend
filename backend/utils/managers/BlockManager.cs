@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WpfApp2.backend.blocks.Conditions;
 using WpfApp2.frontend.blocks;
 using WpfApp2.frontend.utils;
 
@@ -66,7 +67,9 @@ namespace LabBackend.Utils
         public List<Block> GetLinkedFrontendBlocks(List<Block> blocksRAWFrontend)
         {
             Block startBlock = blocksRAWFrontend[0];
+
             List<Block> result = new List<Block>();
+            Stack<Block> buffer = new Stack<Block>();
 
             if (startBlock.NextBlockId == null &&
                 startBlock.TrueBlockId == null &&
@@ -77,16 +80,43 @@ namespace LabBackend.Utils
             }
 
             int newId = 1;
+            bool existElse = false;
+            bool inFalse = false;
 
             void Traverse(Block currentBlock)
             {
+                currentBlock.Id = newId;
+                result.Add(currentBlock);
+
                 if (currentBlock.Type != "if")
                 {
-                    Block nextBlock = GetBlockById(blocksRAWFrontend, currentBlock.NextBlockId);
-                    currentBlock.Id = newId;
-                    result.Add(currentBlock);
+                    Block nextBlock = null;
 
-                    if (currentBlock.Type == "end")
+                    if (inFalse == true && currentBlock.Type != "else") // without else
+                    {
+                        inFalse = false;
+                        buffer.Pop().ExitElseBlockId = newId;
+                    }
+                    else // with else
+                    {
+                        inFalse = false;
+                    }
+                    if (currentBlock.NextBlockId != null)
+                    {
+                        nextBlock = GetBlockById(blocksRAWFrontend, currentBlock.NextBlockId);
+                    }
+                    else if (currentBlock.ExitElseBlockId != null && existElse == true)
+                    {
+                        nextBlock = GetBlockById(blocksRAWFrontend, currentBlock.ExitElseBlockId);
+                    }
+                    else if (currentBlock.ExitElseBlockId != null && existElse == false)
+                    {
+                        newId++;
+                        buffer.Push(currentBlock);
+                        inFalse = true;
+                        return;
+                    }
+                    else if (currentBlock.Type == "end")
                     {
                         return;
                     }
@@ -95,7 +125,21 @@ namespace LabBackend.Utils
 
                     if (nextBlock != null)
                     {
-                        currentBlock.NextBlockId = newId;
+                        if (currentBlock.ExitElseBlockId != null && existElse == true)
+                        {
+                            existElse = false;
+                            currentBlock.ExitElseBlockId = newId;
+                            buffer.Pop().ExitElseBlockId = newId;
+                        }
+                        else
+                        {
+                            currentBlock.NextBlockId = newId;
+                        }
+
+                        if (currentBlock.Type == "else")
+                        {
+                            existElse = true;
+                        }
 
                         Traverse(nextBlock);
                     }
@@ -107,23 +151,19 @@ namespace LabBackend.Utils
                     Block trueBlock = GetBlockById(blocksRAWFrontend, currentBlock.TrueBlockId);
                     Block falseBlock = GetBlockById(blocksRAWFrontend, currentBlock.FalseBlockId);
 
-                    currentBlock.Id = newId;
                     newId++;
 
-                    result.Add(currentBlock);
-
-                    if (currentBlock.TrueBlockId != null)
+                    if (trueBlock != null)
                     {
                         currentBlock.TrueBlockId = newId;
                         Traverse(trueBlock);
                     }
-                    if (currentBlock.FalseBlockId != null)
+                    if (falseBlock != null)
                     {
                         currentBlock.FalseBlockId = newId;
                         Traverse(falseBlock);
                     }
 
-                    return;
                 }
             }
 
@@ -134,6 +174,7 @@ namespace LabBackend.Utils
         public Dictionary<int, Dictionary<int, bool>> CreateAdjacencyMatrix(List<Block> linkedFrontendBlocks)
         {
             Dictionary<int, Dictionary<int, bool>> matrix = new Dictionary<int, Dictionary<int, bool>>();
+            bool isFalsePart = false;
 
             foreach (Block block in linkedFrontendBlocks)
             {
@@ -150,11 +191,23 @@ namespace LabBackend.Utils
                 {
                     matrix[block.Id][block.FalseBlockId.Value] = true;
                 }
+                if (block.ExitElseBlockId.HasValue)
+                {
+                    if (isFalsePart)
+                    {
+                        matrix[block.Id][block.ExitElseBlockId.Value] = true;
+                        isFalsePart = false;
+                    }
+                    else
+                    {
+                        isFalsePart = true;
+                    }
+                }
             }
 
             return matrix;
         }
-        public string TranslateCode(string languageCode, List<Block> linkedFrontendBlocks, Dictionary<int, Dictionary<int, bool>> adjacencyMatrix)
+        public void TranslateCode(string languageCode, List<Block> linkedFrontendBlocks, Dictionary<int, Dictionary<int, bool>> adjacencyMatrix)
         {
             Stack<string> bufferVariables = new Stack<string>();
             int startId = adjacencyMatrix.Keys.First();
@@ -185,6 +238,9 @@ namespace LabBackend.Utils
                     case "if":
                         backendBlock = new ConditionBlock(languageCode, frontendBlock.Text);
                         break;
+                    case "else":
+                        backendBlock = new ElseBlock(languageCode);
+                        break;
                     case "end":
                         backendBlock = new EndBlock(languageCode);
                         break;
@@ -195,11 +251,21 @@ namespace LabBackend.Utils
 
                 bufferVariables.Push(response);
 
-                if (frontendBlock.Type == "if")
+                if (frontendBlock.Type == "if"
+                    || frontendBlock.Type == "else")
                 {
                     deep++;
                 }
+                
+
                 bool isFalsePart = false;
+                bool isElsePart = false;
+
+                if (frontendBlock.Type == "else")
+                {
+                    isElsePart = true;
+                }
+
                 foreach (var nextId in adjacencyMatrix[currentId].Keys)
                 {
                     if (isFalsePart)
@@ -211,19 +277,221 @@ namespace LabBackend.Utils
                     }
                     else
                     {
+                        if (frontendBlock.ExitElseBlockId != null)
+                        {
+                            deep--;
+                            isElsePart = false;
+
+                            do
+                            {
+                                bufferVariables.Pop();
+                            } while (bufferVariables.Peek() != "ElseBlock success");
+                            bufferVariables.Pop();
+                        }
+
                         Traverse(nextId);
                         isFalsePart = true;
                     }
+                }
+                if (isElsePart)
+                {
+                    deep--;
+                    isElsePart = false;
                 }
                 if (isFalsePart && frontendBlock.Type == "if")
                 {
                     deep--;
                 }
-                bufferVariables.Pop();
+                if (bufferVariables.Count != 0)
+                {
+                    bufferVariables.Pop();
+                }
             }
 
             Traverse(startId);
-            return string.Empty;
+        }
+        public void TranslateCodeMultithread(string languageCode, List<Block> linkedFrontendBlocks, Dictionary<int, Dictionary<int, bool>> adjacencyMatrix)
+        {
+            Stack<string> bufferVariables = new Stack<string>();
+            int startId = adjacencyMatrix.Keys.First();
+            Dictionary<int, Dictionary<int, Stack<string>>> keyValuePairs = new Dictionary<int, Dictionary<int, Stack<string>>>();
+            int deep = 0;
+            int deepIndex = 0;
+
+            void Traverse(int currentId)
+            {
+                Block frontendBlock = GetBlockById(linkedFrontendBlocks, currentId);
+                AbstractBlock backendBlock;
+
+                switch (frontendBlock.Type)
+                {
+                    case "start":
+                        backendBlock = new StartBlock(languageCode);
+                        break;
+                    case "AssignmentBlock":
+                        backendBlock = new AssignmentBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "ConstantAssignmentBlock":
+                        backendBlock = new ConstantAssignmentBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "InputBlock":
+                        backendBlock = new InputBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "PrintBlock":
+                        backendBlock = new PrintBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "if":
+                        backendBlock = new ConditionBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "else":
+                        backendBlock = new ElseBlock(languageCode);
+                        break;
+                    case "end":
+                        backendBlock = new EndBlock(languageCode);
+                        break;
+                    default:
+                        throw new NotSupportedException($"Block type '{frontendBlock.Type}' is not supported.");
+                }
+                string response = backendBlock.ExecuteValidation(bufferVariables);
+
+                keyValuePairs[deepIndex] = new Dictionary<int, Stack<string>>();
+                keyValuePairs[deepIndex][deep] = new Stack<string>(bufferVariables);
+                deepIndex++;
+
+                bufferVariables.Push(response);
+
+
+                if (frontendBlock.Type == "if"
+                    || frontendBlock.Type == "else")
+                {
+                    deep++;
+                }
+
+
+                bool isFalsePart = false;
+                bool isElsePart = false;
+
+                if (frontendBlock.Type == "else")
+                {
+                    isElsePart = true;
+                }
+
+                foreach (var nextId in adjacencyMatrix[currentId].Keys)
+                {
+                    if (isFalsePart)
+                    {
+                        deep--;
+
+                        Traverse(nextId);
+                        isFalsePart = false;
+                    }
+                    else
+                    {
+                        if (frontendBlock.ExitElseBlockId != null)
+                        {
+                            deep--;
+                            isElsePart = false;
+
+                            do
+                            {
+                                bufferVariables.Pop();
+                            } while (bufferVariables.Peek() != "ElseBlock success");
+                            bufferVariables.Pop();
+                        }
+
+                        Traverse(nextId);
+                        isFalsePart = true;
+                    }
+                }
+                if (isElsePart)
+                {
+                    deep--;
+                    isElsePart = false;
+                }
+                if (isFalsePart && frontendBlock.Type == "if")
+                {
+                    deep--;
+                }
+                if (bufferVariables.Count != 0)
+                {
+                    bufferVariables.Pop();
+                }
+            }
+
+            Traverse(startId);
+
+            Thread[] threads = new Thread[adjacencyMatrix.Count];
+            string[] finishedTasks = new string[adjacencyMatrix.Count];
+
+            foreach (var item in keyValuePairs)
+            {
+                int blockId = item.Key + 1;
+                int blockIndex = item.Key;
+                int deepBlock = item.Value.Keys.First();
+                Stack<string> historyVariables = item.Value.Values.First();
+
+                Block frontendBlock = GetBlockById(linkedFrontendBlocks, blockId);
+                AbstractBlock backendBlock;
+
+                switch (frontendBlock.Type)
+                {
+                    case "start":
+                        backendBlock = new StartBlock(languageCode);
+                        break;
+                    case "AssignmentBlock":
+                        backendBlock = new AssignmentBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "ConstantAssignmentBlock":
+                        backendBlock = new ConstantAssignmentBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "InputBlock":
+                        backendBlock = new InputBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "PrintBlock":
+                        backendBlock = new PrintBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "if":
+                        backendBlock = new ConditionBlock(languageCode, frontendBlock.Text);
+                        break;
+                    case "else":
+                        backendBlock = new ElseBlock(languageCode);
+                        break;
+                    case "end":
+                        backendBlock = new EndBlock(languageCode);
+                        break;
+                    default:
+                        throw new NotSupportedException($"Block type '{frontendBlock.Type}' is not supported.");
+                }
+                
+                threads[blockIndex] = new Thread(() =>
+                {
+                    finishedTasks[blockIndex] = backendBlock.ExecuteMultithread(deepBlock, historyVariables);
+                });
+                threads[blockIndex].Start();
+            }
+
+            for (int i = 0; i < threads.Length; i++)
+            {
+                threads[i].Join();
+            }
+
+            AbstractBlock startBlock = new StartBlock(languageCode);
+
+            foreach (var item in keyValuePairs)
+            {
+                int blockId = item.Key + 1;
+                int blockIndex = item.Key;
+                int deepBlock = item.Value.Keys.First();
+
+                if (blockId != 1)
+                {
+                    finishedTasks[0] = startBlock.InsertCodeIntoMainMultithread(
+                        deepBlock,
+                        finishedTasks[0], 
+                        finishedTasks[blockIndex]);
+                }
+            }
+            startBlock.WriteAllText(finishedTasks[0]);
         }
     }
 }

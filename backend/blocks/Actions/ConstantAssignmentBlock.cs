@@ -88,5 +88,48 @@ namespace LabBackend.Blocks.Actions
 
             return variableName;
         }
+        public override string ExecuteMultithread(int deep, Stack<string> bufferVariables)
+        {
+            string sanitizedData = string.Empty;
+            if (!IsValidAssignment(this.Content, ref sanitizedData, bufferVariables))
+            {
+                throw new Exception($"[Type: {this.Name}; Content: \"{sanitizedData}\"] Wrong pattern");
+            }
+
+            string[] parts = sanitizedData.Split('=');
+            string variableName = parts[0].Trim();
+            string value = parts[1].Trim();
+
+            switch (this.Language)
+            {
+                case "c":
+                case "c++":
+                case "c#":
+                case "java":
+                    this.Code = $"int {variableName} = {value};";
+                    break;
+                case "python":
+                    this.Code = $"{variableName} = {value}";
+                    break;
+                default:
+                    Console.WriteLine("Unknown programming language");
+                    return "error";
+            }
+
+            return this.Code;
+        }
+        public override string ExecuteValidation(Stack<string> bufferVariables)
+        {
+            string sanitizedData = string.Empty;
+            if (!IsValidAssignment(this.Content, ref sanitizedData, bufferVariables))
+            {
+                throw new Exception($"[Type: {this.Name}; Content: \"{sanitizedData}\"] Wrong pattern");
+            }
+
+            string[] parts = sanitizedData.Split('=');
+            string variableName = parts[0].Trim();
+
+            return variableName;
+        }
     }
 }
