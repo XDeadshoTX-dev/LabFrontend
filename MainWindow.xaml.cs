@@ -536,7 +536,7 @@ namespace BlockLinkingApp
             Dictionary<int, Dictionary<int, bool>> adjacencyMatrix = blockManager.CreateAdjacencyMatrix(linkedFrontendBlocks);
             try
             {
-                blockManager.TranslateCode(
+                blockManager.TranslateCodeMultithread(
                     uiManager.getLanguageCode(),
                     linkedFrontendBlocks,
                     adjacencyMatrix);
