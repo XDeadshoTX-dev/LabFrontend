@@ -249,10 +249,12 @@ namespace LabBackend.Utils
                 }
                 string response = backendBlock.Execute(deep, bufferVariables);
 
-                bufferVariables.Push(response);
+                if (!response.Contains("success"))
+                {
+                    bufferVariables.Push(response);
+                }
 
-                if (frontendBlock.Type == "if"
-                    || frontendBlock.Type == "else")
+                if (frontendBlock.Type == "if" || frontendBlock.Type == "else")
                 {
                     deep++;
                 }
@@ -270,7 +272,10 @@ namespace LabBackend.Utils
                 {
                     if (isFalsePart)
                     {
-                        deep--;
+                        if (deep > 0)
+                        {
+                            deep--;
+                        }
 
                         Traverse(nextId);
                         isFalsePart = false;
@@ -281,12 +286,6 @@ namespace LabBackend.Utils
                         {
                             deep--;
                             isElsePart = false;
-
-                            do
-                            {
-                                bufferVariables.Pop();
-                            } while (bufferVariables.Peek() != "ElseBlock success");
-                            bufferVariables.Pop();
                         }
 
                         Traverse(nextId);
@@ -302,7 +301,7 @@ namespace LabBackend.Utils
                 {
                     deep--;
                 }
-                if (bufferVariables.Count != 0)
+                if (frontendBlock.Type == "ConstantAssignmentBlock" || frontendBlock.Type == "InputBlock")
                 {
                     bufferVariables.Pop();
                 }
@@ -358,11 +357,13 @@ namespace LabBackend.Utils
                 keyValuePairs[deepIndex][deep] = new Stack<string>(bufferVariables);
                 deepIndex++;
 
-                bufferVariables.Push(response);
+                if (!response.Contains("success"))
+                {
+                    bufferVariables.Push(response);
+                }
 
 
-                if (frontendBlock.Type == "if"
-                    || frontendBlock.Type == "else")
+                if (frontendBlock.Type == "if" || frontendBlock.Type == "else")
                 {
                     deep++;
                 }
@@ -380,7 +381,10 @@ namespace LabBackend.Utils
                 {
                     if (isFalsePart)
                     {
-                        deep--;
+                        if (deep > 0)
+                        {
+                            deep--;
+                        }
 
                         Traverse(nextId);
                         isFalsePart = false;
@@ -391,12 +395,6 @@ namespace LabBackend.Utils
                         {
                             deep--;
                             isElsePart = false;
-
-                            do
-                            {
-                                bufferVariables.Pop();
-                            } while (bufferVariables.Peek() != "ElseBlock success");
-                            bufferVariables.Pop();
                         }
 
                         Traverse(nextId);
@@ -412,7 +410,7 @@ namespace LabBackend.Utils
                 {
                     deep--;
                 }
-                if (bufferVariables.Count != 0)
+                if (frontendBlock.Type == "ConstantAssignmentBlock" || frontendBlock.Type == "InputBlock")
                 {
                     bufferVariables.Pop();
                 }
