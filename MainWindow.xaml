@@ -25,11 +25,33 @@
             <Button x:Name="SaveButton" Content="Save All" Click="SaveAllButton_Click" Margin="5"/>
             <Button x:Name="LoadButton" Content="Load All" Click="LoadAllButton_Click" Margin="5"/>
             <Button x:Name="TranslateButton" Content="Translate into code" Click="TranslateButton_Click" Margin="5"/>
-            <ComboBox x:Name="LanguageComboBox" Width="120" Margin="5"/>
+            <ComboBox x:Name="LanguageComboBox" Width="120" Margin="5">
+                <ComboBoxItem Content="C" IsSelected="True"/>
+                <ComboBoxItem Content="C++"/>
+                <ComboBoxItem Content="C#"/>
+                <ComboBoxItem Content="Java"/>
+                <ComboBoxItem Content="Python"/>
+            </ComboBox>
             <ComboBox x:Name="UILanguageComboBox" Width="120" Margin="5" SelectionChanged="UILanguageComboBox_SelectionChanged">
                 <ComboBoxItem Content="English" Tag="en" IsSelected="True"/>
                 <ComboBoxItem Content="Українська" Tag="uk"/>
                 <ComboBoxItem Content="Deutsch" Tag="de"/>
+                <ComboBoxItem Content="Français" Tag="fr"/>
+                <ComboBoxItem Content="Español" Tag="es"/>
+                <ComboBoxItem Content="Italiano" Tag="it"/>
+                <ComboBoxItem Content="Português" Tag="pt"/>
+                <ComboBoxItem Content="Polski" Tag="pl"/>
+                <ComboBoxItem Content="Nederlands" Tag="nl"/>
+                <ComboBoxItem Content="Svenska" Tag="sv"/>
+                <ComboBoxItem Content="Dansk" Tag="da"/>
+                <ComboBoxItem Content="Suomi" Tag="fi"/>
+                <ComboBoxItem Content="Čeština" Tag="cs"/>
+                <ComboBoxItem Content="Magyar" Tag="hu"/>
+                <ComboBoxItem Content="日本語" Tag="ja"/>
+                <ComboBoxItem Content="한국어" Tag="ko"/>
+                <ComboBoxItem Content="中文" Tag="zh"/>
+                <ComboBoxItem Content="العربية" Tag="ar"/>
+                <ComboBoxItem Content="Türkçe" Tag="tr"/>
             </ComboBox>
 
 

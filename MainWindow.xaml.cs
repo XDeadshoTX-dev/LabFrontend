@@ -31,7 +31,6 @@ namespace BlockLinkingApp
             uiManager = new UIManager(WorkspaceCanvas);
             LoadTranslation();
             InitWorkspace();
-            InitComboBox();
             UpdateUI();
             this.KeyDown += MainWindow_DelDown;
             this.KeyDown += MainWindow_InsDown;
@@ -177,20 +176,6 @@ namespace BlockLinkingApp
 
 
 
-
-
-
-
-
-        private void InitComboBox()
-        {
-            LanguageComboBox.Items.Add("C");
-            LanguageComboBox.Items.Add("C++");
-            LanguageComboBox.Items.Add("C#");
-            LanguageComboBox.Items.Add("Java");
-            LanguageComboBox.Items.Add("Python");
-            LanguageComboBox.SelectedIndex = 0;
-        }
 
 
 
