@@ -1,0 +1,11 @@
+{
+  "AssignmentBlock": "代入 V1=V2",
+  "ConstantAssignmentBlock": "代入 V=C",
+  "InputBlock": "入力 V",
+  "PrintBlock": "印刷 V",
+  "if": "if",
+  "else": "else",
+  "SaveAll": "フローチャートを保存",
+  "LoadAll": "フローチャートを読み込み",
+  "Translate": "放送"
+}

@@ -1,0 +1,11 @@
+{
+  "AssignmentBlock": "Atama V1=V2",
+  "ConstantAssignmentBlock": "Atama V=C",
+  "InputBlock": "Giriş V",
+  "PrintBlock": "Yazdır V",
+  "if": "if",
+  "else": "else",
+  "SaveAll": "Akış şemalarını kaydet",
+  "LoadAll": "Akış şemalarını yükle",
+  "Translate": "Yayın"
+}

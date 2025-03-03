@@ -1,0 +1,11 @@
+{
+  "AssignmentBlock": "Tilldelning V1=V2",
+  "ConstantAssignmentBlock": "Tilldelning V=C",
+  "InputBlock": "Inmatning V",
+  "PrintBlock": "Skriv ut V",
+  "if": "if",
+  "else": "else",
+  "SaveAll": "Spara flödesscheman",
+  "LoadAll": "Ladda flödesscheman",
+  "Translate": "Sändning"
+}
