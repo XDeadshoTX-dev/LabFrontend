@@ -116,7 +116,7 @@ namespace WpfApp2.frontend.utils
         public string getLanguageCode()
         {
             var languageComboBox = window.FindName("LanguageComboBox") as ComboBox;
-            return languageComboBox.SelectedValue.ToString();
+            return languageComboBox.SelectionBoxItem.ToString();
         }
     }
 }
